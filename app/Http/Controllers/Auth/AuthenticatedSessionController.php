@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Inertia\{Inertia, Response};
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use Inertia\Response;
+use Illuminate\Support\Facades\{Auth, Route};
+use Illuminate\Http\{RedirectResponse, Request};
 
 class AuthenticatedSessionController extends Controller
 {
@@ -20,18 +17,18 @@ class AuthenticatedSessionController extends Controller
     {
         return Inertia::render('auth/Login', [
             'canResetPassword' => Route::has('password.request'),
-            'status' => $request->session()->get('status'),
+            'status'           => $request->session()->get('status'),
         ]);
     }
 
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $loginRequest): RedirectResponse
     {
-        $request->authenticate();
+        $loginRequest->authenticate();
 
-        $request->session()->regenerate();
+        $loginRequest->session()->regenerate();
 
         return redirect()->intended(route('dashboard', absolute: false));
     }

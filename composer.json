@@ -16,6 +16,7 @@
         "tightenco/ziggy": "^2.4"
     },
     "require-dev": {
+        "driftingly/rector-laravel": "^2.0",
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.18",
@@ -53,6 +54,10 @@
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi"
         ],
+        "post-install-cmd": [
+            "cp scripts/pre-commit .git/hooks/pre-commit",
+            "chmod +x .git/hooks/pre-commit"
+        ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
             "npx concurrently -c \"#93c5fd,#fdba74\" \"php artisan serve\" \"yarn dev\" --names=server,vite"
@@ -60,7 +65,7 @@
         "dev:ssr": [
             "yarn build:ssr",
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"php artisan inertia:start-ssr\" --names=server,queue,logs,ssr"
+            "npx concurrently -c \"#93c5fd,#fdba74\" \"php artisan serve\" \"php artisan inertia:start-ssr\" --names=server,ssr"
         ],
         "test": [
             "@php artisan config:clear --ansi",

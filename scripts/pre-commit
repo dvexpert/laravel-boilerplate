@@ -1,0 +1,64 @@
+#!/bin/bash
+
+# Record the start time
+start_time=$(date +%s)
+
+echo -e "\033[33mDisable test suite from pre-commit hook after 1k+ assertion to speedup development, and instead maybe move to something like github actions.\033[0m"
+
+echo "Pre Commit Hook running php lint using laravel/pint ....\n"
+
+# get all the staged files
+# --cached options for staged changes only
+files=$(git diff --cached --name-only --diff-filter=ACMR -- '*.php')
+
+# Only if there php file changes then only run lint and test
+if [ "x$files" != "x" ]; then
+    # Run php-cs-fixer via laravel/pint
+    vendor/bin/pint $files
+    pint_exit_code=$?
+
+    # echo "Pint exit code: $pint_exit_code"  # Output the exit code
+    # check if pint run successfully and has no errors.
+    if [ "$pint_exit_code" == 1 ]; then
+        echo "Pint failed with exit code $pint_exit_code. Please fix linting errors before committing."
+        exit 1 # Indicate failure to Git
+    fi
+
+    if [ ! -f .env.testing ]; then
+        echo ".env.testing file not found. Please create a new testing env file otherwise you main database data will be lost."
+        exit 1
+    fi
+
+    echo "Setting up fresh test db using .env.testing configuration...."
+
+    php artisan db:wipe --env=testing
+    php artisan migrate --env=testing
+    echo "seeding database..."
+    php artisan db:seed -n -q --env=testing
+    php artisan optimize:clear --env=testing
+    php artisan cache:clear --env=testing
+
+    # Run Pest tests
+    echo "Running unit test..."
+    php artisan test --env=testing
+    pest_exit_code=$?
+
+    if [ "$pest_exit_code" == 1 ]; then
+        echo "Feature tests failed with exit code $pest_exit_code. Please fix tests before committing."
+        exit 1 # Indicate failure to Git
+    fi
+
+    git add $files
+fi
+
+echo "Lint Completed. Committing changes to git..."
+
+# Record the end time
+end_time=$(date +%s)
+
+# Calculate the execution time
+execution_time=$((end_time - start_time))
+
+echo "Total execution time: $execution_time seconds"
+
+exit 0 # indicating success to Git Commit

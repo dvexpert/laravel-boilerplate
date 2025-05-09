@@ -60,7 +60,7 @@ return [
         'driver' => env('PULSE_STORAGE_DRIVER', 'database'),
 
         'trim' => [
-            'keep' => env('PULSE_STORAGE_KEEP', '7 days'),
+            'keep' => env('PULSE_STORAGE_KEEP', '3 days'),
         ],
 
         'database' => [

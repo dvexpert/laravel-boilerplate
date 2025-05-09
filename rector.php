@@ -49,6 +49,8 @@ return RectorConfig::configure()
         RenameParamToMatchTypeRector::class => [
             __DIR__ . '/database/migrations',
         ],
+        __DIR__ . '/_ide_helper.php',
+        __DIR__ . '/_ide_helper_models.php',
     ])
     ->withSkipPath(__DIR__ . '/bootstrap/cache')
     ->withPhpSets(php84: true)

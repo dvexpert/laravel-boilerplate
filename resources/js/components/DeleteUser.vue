@@ -66,7 +66,7 @@ const closeModal = () => {
 
                         <div class="grid gap-2">
                             <Label for="password" class="sr-only">Password</Label>
-                            <Input id="password" type="password" name="password" ref="passwordInput" v-model="form.password" placeholder="Password" />
+                            <Input id="password" ref="passwordInput" v-model="form.password" type="password" name="password" placeholder="Password" />
                             <InputError :message="form.errors.password" />
                         </div>
 

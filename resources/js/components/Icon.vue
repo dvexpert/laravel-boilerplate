@@ -21,6 +21,7 @@ const className = computed(() => cn('h-4 w-4', props.class));
 
 const icon = computed(() => {
     const iconName = props.name.charAt(0).toUpperCase() + props.name.slice(1);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (icons as Record<string, any>)[iconName];
 });
 </script>

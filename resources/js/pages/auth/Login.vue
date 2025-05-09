@@ -35,18 +35,18 @@ const submit = () => {
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit" class="flex flex-col gap-6">
+        <form class="flex flex-col gap-6" @submit.prevent="submit">
             <div class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="email">Email address</Label>
                     <Input
                         id="email"
+                        v-model="form.email"
                         type="email"
                         required
                         autofocus
                         :tabindex="1"
                         autocomplete="email"
-                        v-model="form.email"
                         placeholder="email@example.com"
                     />
                     <InputError :message="form.errors.email" />
@@ -61,11 +61,11 @@ const submit = () => {
                     </div>
                     <Input
                         id="password"
+                        v-model="form.password"
                         type="password"
                         required
                         :tabindex="2"
                         autocomplete="current-password"
-                        v-model="form.password"
                         placeholder="Password"
                     />
                     <InputError :message="form.errors.password" />
@@ -84,7 +84,7 @@ const submit = () => {
                 </Button>
             </div>
 
-            <div class="text-center text-sm text-muted-foreground">
+            <div class="text-muted-foreground text-center text-sm">
                 Don't have an account?
                 <TextLink :href="route('register')" :tabindex="5">Sign up</TextLink>
             </div>

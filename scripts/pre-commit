@@ -9,7 +9,9 @@ echo "Pre Commit Hook running php lint using laravel/pint ....\n"
 
 # get all the staged files
 # --cached options for staged changes only
-files=$(git diff --cached --name-only --diff-filter=ACMR -- '*.php')
+files=$(git diff --cached --name-only --diff-filter=ACMR -- '*.{php|js|ts|vue}')
+
+frontFiles=$(git diff --cached --name-only --diff-filter=ACMR -- '*.js' '*.ts' '*.vue')
 
 # Only if there php file changes then only run lint and test
 if [ "x$files" != "x" ]; then
@@ -51,7 +53,24 @@ if [ "x$files" != "x" ]; then
     git add $files
 fi
 
-echo "Lint Completed. Committing changes to git..."
+echo "Lint Completed."
+
+if [ "x$frontFiles" != "x" ]; then
+    # Run eslint
+    echo "Running eslint..."
+    yarn eslint $frontFiles --fix
+    eslint_exit_code=$?
+
+    # check if eslint run successfully and has no errors.
+    if [ "$eslint_exit_code" == 1 ]; then
+        echo "Eslint failed with exit code $eslint_exit_code. Please fix linting errors before committing."
+        exit 1 # Indicate failure to Git
+    fi
+
+    git add $frontFiles
+fi
+
+echo "Committing changes to git..."
 
 # Record the end time
 end_time=$(date +%s)

@@ -9,7 +9,7 @@ echo "Pre Commit Hook running php lint using laravel/pint ....\n"
 
 # get all the staged files
 # --cached options for staged changes only
-files=$(git diff --cached --name-only --diff-filter=ACMR -- '*.{php|js|ts|vue}')
+files=$(git diff --cached --name-only --diff-filter=ACMR -- '*.php')
 
 frontFiles=$(git diff --cached --name-only --diff-filter=ACMR -- '*.js' '*.ts' '*.vue')
 

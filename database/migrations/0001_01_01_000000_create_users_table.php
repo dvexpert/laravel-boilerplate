@@ -12,13 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table): void {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->unsignedBigInteger('auto_id')->unique();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+        });
+
+        // * Reference: https://github.com/laravel/framework/pull/50155#issuecomment-2485849480
+        Schema::table('users', function (Blueprint $table): void {
+            $table->unsignedBigInteger('auto_id')->unique()->autoIncrement()->change();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table): void {

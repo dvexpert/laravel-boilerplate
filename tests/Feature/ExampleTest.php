@@ -1,7 +1,14 @@
 <?php
 
-it('returns a successful response', function (): void {
-    $response = $this->get('/');
+use App\Models\User;
 
-    $response->assertStatus(200);
+use function Pest\Laravel\actingAs;
+
+it('returns a successful response', function (): void {
+    /** @var User $user */
+    $user = User::factory()->create();
+
+    actingAs($user)
+        ->get('/')
+        ->assertStatus(200);
 });

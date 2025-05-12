@@ -7,6 +7,7 @@ import { LogOut, Settings } from 'lucide-vue-next';
 
 interface Props {
     user: User;
+    onlyProfile?: boolean;
 }
 
 const handleLogout = () => {
@@ -17,12 +18,14 @@ defineProps<Props>();
 </script>
 
 <template>
-    <DropdownMenuLabel class="p-0 font-normal">
-        <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-            <UserInfo :user="user" :show-email="true" />
-        </div>
-    </DropdownMenuLabel>
-    <DropdownMenuSeparator />
+    <template v-if="!onlyProfile">
+        <DropdownMenuLabel class="p-0 font-normal">
+            <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                <UserInfo :user="user" :show-email="true" />
+            </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+    </template>
     <DropdownMenuGroup>
         <DropdownMenuItem :as-child="true">
             <Link class="block w-full" :href="route('profile.edit')" prefetch as="button">
@@ -31,11 +34,14 @@ defineProps<Props>();
             </Link>
         </DropdownMenuItem>
     </DropdownMenuGroup>
-    <DropdownMenuSeparator />
-    <DropdownMenuItem :as-child="true">
-        <Link class="block w-full" method="post" :href="route('logout')" as="button" @click="handleLogout">
-            <LogOut class="mr-2 h-4 w-4" />
-            Log out
-        </Link>
-    </DropdownMenuItem>
+
+    <template v-if="!onlyProfile">
+        <DropdownMenuSeparator />
+        <DropdownMenuItem :as-child="true">
+            <Link class="block w-full" method="post" :href="route('logout')" as="button" @click="handleLogout">
+                <LogOut class="mr-2 h-4 w-4" />
+                Log out
+            </Link>
+        </DropdownMenuItem>
+    </template>
 </template>

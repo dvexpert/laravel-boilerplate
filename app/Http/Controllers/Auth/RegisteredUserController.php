@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\{Auth, Hash};
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\{RedirectResponse, Request};
 
+/**
+ * @deprecated - Direct registration disabled.
+ */
 class RegisteredUserController extends Controller
 {
     /**

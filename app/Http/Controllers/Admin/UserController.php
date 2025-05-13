@@ -14,7 +14,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        return Inertia::render('admin/User');
+        return Inertia::render('admin/User', [
+            'users' => (fn () => User::query()->with(['roles'])->paginate(5)),
+        ]);
     }
 
     /**

@@ -1,3 +1,5 @@
+import { RoleEnumType } from '@/enums/RoleEnum';
+import { UserStatusEnumType } from '@/enums/UserStatusEnum';
 import type { PageProps } from '@inertiajs/core';
 import type { LucideIcon } from 'lucide-vue-next';
 import type { Config } from 'ziggy-js';
@@ -26,6 +28,14 @@ export interface SharedData extends PageProps {
     sidebarOpen: boolean;
 }
 
+export interface UserRole {
+    id: number;
+    name: RoleEnumType;
+    name_label: string;
+    guard_name: 'web';
+    created_at: string;
+    updated_at: string;
+}
 export interface User {
     id: number;
     name: string;
@@ -34,6 +44,28 @@ export interface User {
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
+    roles: UserRole[];
+    status: UserStatusEnumType;
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;
+
+export interface Paginated<T = {}> {
+    data: T;
+    current_page: number;
+    first_page_url: string;
+    from: number;
+    last_page: number;
+    last_page_url: string;
+    links: {
+        url: string | null;
+        label: string;
+        active: boolean;
+    }[];
+    next_page_url: string | null;
+    path: string;
+    per_page: number;
+    prev_page_url: string | null;
+    to: number;
+    total: number;
+}

@@ -32,23 +32,28 @@ const { isMobile } = useSidebar();
 
 <template>
     <div class="p-6">
-        <Heading title="Admin Panel" description="Manage system settings, users, and templates" class="!mb-6 text-2xl [&_h2]:text-3xl" />
+        <Heading
+            title="Admin Panel"
+            description="Manage system settings, users, and templates"
+            class="!mb-6 [&_h2]:text-2xl [&_p]:text-base [&_p]:text-gray-600"
+        />
 
         <div class="">
             <aside class="w-full">
-                <nav class="flex space-y-1 space-x-0">
+                <nav class="flex space-y-1 space-x-0 border-b">
                     <Button
                         v-for="item in navItems"
                         :key="item.href"
                         variant="ghost"
-                        :class="`h-auto gap-2 rounded-none border-indigo-600 px-4 py-4 text-xl md:px-6 md:py-4 ${currentPath === item.href ? 'border-b-2 text-indigo-600' : ''}`"
+                        :data-state="`${currentPath === item.href ? 'active' : ''}`"
+                        :class="`md h-auto gap-2 rounded-none px-4 py-4 text-sm md:px-6 md:py-4 ${currentPath === item.href ? 'border-b-2 border-b-indigo-600 text-indigo-600' : 'text-gray-500 hover:text-gray-700'}`"
                         as-child
                     >
-                        <Link :href="item.href" prefetch>
+                        <Link :href="item.href" prefetch class="mb-0">
                             <span v-if="item.icon">
                                 <component :is="item.icon" class="size-5" />
                             </span>
-                            <span v-show="!isMobile || currentPath === item.href" class="text-lg md:text-[inherit]">
+                            <span v-show="!isMobile || currentPath === item.href" class="text-sm md:text-[inherit]">
                                 {{ item.title }}
                             </span>
                         </Link>
@@ -56,11 +61,29 @@ const { isMobile } = useSidebar();
                 </nav>
             </aside>
 
-            <div class="mt-6 w-full">
-                <section class="max-w-xl space-y-12">
+            <div id="admin-layout" class="mt-6 w-full">
+                <section>
                     <slot />
                 </section>
             </div>
         </div>
     </div>
 </template>
+
+<style scoped>
+@reference 'tailwindcss';
+
+/* @ref https://vuejs.org/api/sfc-css-features#deep-selectors */
+#admin-layout :deep(.split-container) {
+    @apply grid h-full w-full grid-cols-6 gap-x-6;
+}
+#admin-layout :deep(.split-container > .split-child) {
+    @apply rounded-lg border border-gray-200 bg-white;
+}
+#admin-layout :deep(.split-container > .split-child.split-left) {
+    @apply col-span-2;
+}
+#admin-layout :deep(.split-container > .split-child.split-right) {
+    @apply col-span-4;
+}
+</style>

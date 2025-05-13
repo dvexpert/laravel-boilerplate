@@ -3,7 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { SidebarTrigger, useSidebar } from '@/components/ui/sidebar';
+import { /* SidebarTrigger, */ useSidebar } from '@/components/ui/sidebar';
 import { SidebarHeaderSearch, SidebarNotification } from '@/components/ui/sidebar-header';
 import Tooltip from '@/components/ui/tooltip/Tooltip.vue';
 import TooltipContent from '@/components/ui/tooltip/TooltipContent.vue';
@@ -38,10 +38,10 @@ const handleLogout = () => {
 
 <template>
     <header
-        class="border-sidebar-border/70 flex h-16 shrink-0 items-center gap-2 border-b px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 md:px-4"
+        class="border-sidebar-border/70 h-16/ sticky top-0 flex shrink-0 items-center gap-2 border-b p-4 px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 md:px-4"
     >
         <div class="flex items-center gap-2">
-            <SidebarTrigger class="-ml-1" />
+            <!-- <SidebarTrigger class="-ml-1" /> -->
             <!-- <template v-if="breadcrumbs && breadcrumbs.length > 0">
                 <Breadcrumbs :breadcrumbs="breadcrumbs" />
             </template> -->

@@ -49,13 +49,13 @@ const handleSystemThemeChange = () => {
     updateTheme(currentAppearance || 'system');
 };
 
-export function initializeTheme() {
+export function initializeTheme(theme?: Appearance) {
     if (typeof window === 'undefined') {
         return;
     }
 
     // Initialize theme from saved preference or default to system...
-    const savedAppearance = getStoredAppearance();
+    const savedAppearance = theme ?? getStoredAppearance();
     updateTheme(savedAppearance || 'system');
 
     // Set up system theme change listener...

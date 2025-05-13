@@ -2,7 +2,7 @@
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(RefreshDatabase::class);
+// uses(RefreshDatabase::class);
 
 test('registration screen can be rendered', function (): void {
     $response = $this->get('/register');

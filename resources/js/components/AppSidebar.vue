@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import NavMain from '@/components/NavMain.vue';
 import { Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/vue3';
+import { SharedData, type NavItem } from '@/types';
+import { Link, usePage } from '@inertiajs/vue3';
 import { LayoutGrid, Settings } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
+const page = usePage<SharedData>();
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
@@ -14,8 +15,9 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Admin',
-        href: '/admin',
+        href: '/admin/template',
         icon: Settings,
+        isActive: page.url.startsWith('/admin'),
     },
 ];
 

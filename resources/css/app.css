@@ -182,4 +182,11 @@
     body {
         @apply bg-background text-foreground;
     }
+
+    body main {
+        @apply bg-gray-100;
+    }
+    body main header {
+        @apply bg-white;
+    }
 }

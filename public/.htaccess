@@ -3,7 +3,19 @@
         Options -MultiViews -Indexes
     </IfModule>
 
+    # Protect .env and other sensitive files
+    <FilesMatch "^\.env|\.git|composer\.(json|lock)|artisan|server\.php|.htaccess$">
+        Require all denied
+    </FilesMatch>
+
+    # Disable directory listing
+    Options -Indexes
+
     RewriteEngine On
+
+    # Enforce HTTPS (optional, enable if SSL is active)
+    # RewriteCond %{HTTPS} !=on
+    # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
@@ -13,13 +25,19 @@
     RewriteCond %{HTTP:x-xsrf-token} .
     RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
 
-    # Redirect Trailing Slashes If Not A Folder...
+    # Redirect Trailing Slashes If Not A Folder
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
-    # Send Requests To Front Controller...
+    # Deny access to hidden files/folders (except .well-known)
+    RewriteCond %{SCRIPT_FILENAME} -d [OR]
+    RewriteCond %{SCRIPT_FILENAME} -f
+    RewriteRule "(^|/)\.(?!well-known)" - [F]
+
+    # Send Requests To Front Controller
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+

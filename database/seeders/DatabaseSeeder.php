@@ -22,9 +22,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $user = User::factory()->create([
-            'first_name' => 'Teq',
-            'last_name'  => 'Buddies',
-            'email'      => 'info@teqbuddies.com',
+            'first_name' => 'PWD',
+            'last_name'  => 'System Admin',
+            'email'      => 'ppa-pwd-system-admin@example.com',
         ]);
 
         $user->assignRole(Role::findByName(RoleEnum::SYSTEM_ADMINISTRATOR->value));

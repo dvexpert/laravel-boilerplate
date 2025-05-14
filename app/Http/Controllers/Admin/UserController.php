@@ -62,14 +62,6 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(User $user): void
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, User $user)
@@ -110,8 +102,12 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user): void
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        return redirect()->to(route('admin.user.index'))->with([
+            'message' => 'User deleted successfully',
+        ]);
     }
 }

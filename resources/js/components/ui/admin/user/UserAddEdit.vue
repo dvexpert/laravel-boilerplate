@@ -6,15 +6,16 @@ import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
 import { RoleEnum } from '@/enums/RoleEnum';
 import { UserStatusEnum } from '@/enums/UserStatusEnum';
-import { User } from '@/types';
-import { useForm } from '@inertiajs/vue3';
-import { Eye, EyeOff, Save, X } from 'lucide-vue-next';
+import { SharedData, User } from '@/types';
+import { useForm, usePage } from '@inertiajs/vue3';
+import { Eye, EyeOff, Save, Trash, X } from 'lucide-vue-next';
 import { onMounted, ref, watch } from 'vue';
 
 interface Props {
     user?: User;
 }
 
+const page = usePage<SharedData>();
 const props = defineProps<Props>();
 
 const form = useForm({
@@ -80,6 +81,19 @@ const emit = defineEmits(['close']);
 const close = () => {
     form.reset();
     emit('close');
+};
+const deleteUser = () => {
+    if (props.user && page.props.auth.user.id === props.user.id) {
+        return;
+    }
+
+    if (confirm('Are you sure you want to delete this user?')) {
+        form.delete(route('admin.user.destroy', props.user?.id), {
+            onSuccess: () => {
+                close();
+            },
+        });
+    }
 };
 </script>
 
@@ -181,6 +195,10 @@ const close = () => {
                 <div class="flex items-center gap-4">
                     <Teleport to="#user-details-action-container">
                         <div class="flex items-center gap-2">
+                            <Button v-if="user && page.props.auth.user.id !== user.id" variant="destructive" size="sm" :disabled="form.processing" @click="deleteUser">
+                                <Trash class="size-4" />
+                                Delete
+                            </Button>
                             <Button variant="secondary" size="sm" :disabled="form.processing" @click="close">
                                 <X class="size-4" />
                                 Cancel

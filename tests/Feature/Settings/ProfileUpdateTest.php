@@ -3,7 +3,7 @@
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(RefreshDatabase::class);
+// uses(RefreshDatabase::class);
 
 test('profile page is displayed', function (): void {
     $user = User::factory()->create();
@@ -16,13 +16,16 @@ test('profile page is displayed', function (): void {
 });
 
 test('profile information can be updated', function (): void {
+    /** @var User $user */
     $user = User::factory()->create();
 
+    $email    = fake()->email();
     $response = $this
         ->actingAs($user)
         ->patch('/settings/profile', [
-            'name'  => 'Test User',
-            'email' => 'test@example.com',
+            'first_name' => 'Test',
+            'last_name'  => 'User',
+            'email'      => $email,
         ]);
 
     $response
@@ -31,8 +34,9 @@ test('profile information can be updated', function (): void {
 
     $user->refresh();
 
-    expect($user->name)->toBe('Test User');
-    expect($user->email)->toBe('test@example.com');
+    expect($user->first_name)->toBe('Test');
+    expect($user->last_name)->toBe('User');
+    expect($user->email)->toBe($email);
     expect($user->email_verified_at)->toBeNull();
 });
 
@@ -42,8 +46,9 @@ test('email verification status is unchanged when the email address is unchanged
     $response = $this
         ->actingAs($user)
         ->patch('/settings/profile', [
-            'name'  => 'Test User',
-            'email' => $user->email,
+            'first_name' => 'Test',
+            'last_name'  => 'User',
+            'email'      => $user->email,
         ]);
 
     $response

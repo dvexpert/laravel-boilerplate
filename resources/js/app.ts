@@ -20,8 +20,16 @@ declare module 'vite/client' {
     }
 }
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+if (!String.prototype.toTitleCase) {
+    String.prototype.toTitleCase = function (): string {
+        return this.replace(/_/g, ' ')
+            .split(' ')
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+    };
+}
 
+const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./pages/${name}.vue`, import.meta.glob<DefineComponent>('./pages/**/*.vue')),
@@ -33,8 +41,10 @@ createInertiaApp({
     },
     progress: {
         color: '#4B5563',
+        delay: 10,
+        showSpinner: true,
     },
 });
 
 // This will set light / dark mode on page load...
-initializeTheme();
+initializeTheme('light');

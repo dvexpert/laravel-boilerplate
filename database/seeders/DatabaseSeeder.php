@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Enums\RoleEnum;
+use App\Models\{Role, User};
 use Illuminate\Database\Seeder;
+
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,9 +17,16 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name'  => 'TeqBuddies',
-            'email' => 'info@teqbuddies.com',
+        $this->call([
+            RolePermissionSeeder::class,
         ]);
+
+        $user = User::factory()->create([
+            'first_name' => 'PWD',
+            'last_name'  => 'System Admin',
+            'email'      => 'ppa-pwd-system-admin@example.com',
+        ]);
+
+        $user->assignRole(Role::findByName(RoleEnum::SYSTEM_ADMINISTRATOR->value));
     }
 }

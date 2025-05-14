@@ -11,7 +11,7 @@ import { Head } from '@inertiajs/vue3';
 
         <AdminLayout>
             <div class="space-y-6">
-                <HeadingSmall title="Manage Templates" description="Coming Soon..." />
+                <HeadingSmall title="Manage Templates" class="bg-transparent" description="Coming Soon..." />
             </div>
         </AdminLayout>
     </AppLayout>

@@ -11,7 +11,7 @@ import { Head } from '@inertiajs/vue3';
 
         <AdminLayout>
             <div class="space-y-6">
-                <HeadingSmall title="System Configuration" description="Coming soon..." />
+                <HeadingSmall title="System Configuration" class="bg-transparent" description="Coming soon..." />
             </div>
         </AdminLayout>
     </AppLayout>

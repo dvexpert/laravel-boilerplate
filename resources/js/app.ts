@@ -20,6 +20,15 @@ declare module 'vite/client' {
     }
 }
 
+if (!String.prototype.toTitleCase) {
+    String.prototype.toTitleCase = function (): string {
+        return this.replace(/_/g, ' ')
+            .split(' ')
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+    };
+}
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

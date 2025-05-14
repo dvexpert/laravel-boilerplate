@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import UserAddEdit from '@/components/ui/admin/user/UserAddEdit.vue';
 import UserListSkeltonLoader from '@/components/ui/admin/user/UserListSkeltonLoader.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,13 +8,52 @@ import { UserStatusEnum } from '@/enums/UserStatusEnum';
 import AdminLayout from '@/layouts/admin/Layout.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Paginated, SharedData, User } from '@/types';
-import { Deferred, Head, usePage } from '@inertiajs/vue3';
-import { FilePen, Save, UserPlus, Users } from 'lucide-vue-next';
+import { Deferred, Head, router, usePage } from '@inertiajs/vue3';
+import { watchDebounced } from '@vueuse/core';
+import { FilePen, UserPlus, Users, X } from 'lucide-vue-next';
+import { onMounted, ref } from 'vue';
 
 interface Props extends SharedData {
     users: Paginated<User[]>;
 }
 const page = usePage<Props>();
+
+const searchField = ref<string>('');
+const action = ref<{ label?: 'create' | 'edit'; user?: User }>({
+    label: undefined,
+    user: undefined,
+});
+
+onMounted(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('search')) {
+        searchField.value = params.get('search') ?? '';
+    }
+
+    watchDebounced(
+        searchField,
+        () => {
+            if (searchField.value === '') {
+                router.visit(route('admin.user.index'), { preserveState: true, preserveScroll: true, only: ['users'] });
+                return;
+            }
+
+            router.get(
+                route('admin.user.index'),
+                {
+                    search: searchField.value,
+                },
+                { preserveState: true, preserveScroll: true, only: ['users'] },
+            );
+        },
+        { debounce: 300 },
+    );
+});
+
+const editUser = (user: User) => {
+    action.value.label = 'edit';
+    action.value.user = user;
+};
 </script>
 
 <template>
@@ -25,27 +65,42 @@ const page = usePage<Props>();
                 <div class="split-child split-left">
                     <div class="flex items-center justify-between border-b border-gray-200 p-4 text-lg">
                         <h2>Users</h2>
-                        <Button varian="primary">
+                        <Button varian="primary" @click="action = { label: 'create', user: undefined }">
                             <UserPlus class="size-4" />
                         </Button>
                     </div>
 
                     <div class="flex flex-col">
                         <div class="p-2">
-                            <Input placeholder="Search users..." />
+                            <div class="relative w-full">
+                                <Input v-model="searchField" placeholder="Search users..." />
+                                <span class="absolute inset-y-0 end-0 flex items-center justify-center">
+                                    <Button type="button" variant="ghost" @click.prevent="searchField = ''">
+                                        <X class="size-4" />
+                                    </Button>
+                                </span>
+                            </div>
                         </div>
 
                         <Deferred data="users">
                             <template #fallback>
                                 <UserListSkeltonLoader />
                             </template>
+                            <div v-if="page.props?.users?.data.length === 0" class="flex h-64 flex-col items-center justify-center text-gray-500">
+                                <Users class="size-12" />
+                                <p class="text-lg">No users found</p>
+                            </div>
+
                             <div
                                 v-for="(user, index) in page.props?.users?.data"
                                 :key="user.id"
-                                class="flex items-center justify-between p-4 hover:bg-gray-50"
+                                class="flex cursor-pointer items-center justify-between p-4 hover:bg-gray-50"
                                 :class="{
                                     'border-b border-gray-200': index < page.props?.users?.data.length - 1,
                                 }"
+                                role="button"
+                                aria-label="Edit user"
+                                @click="editUser(user)"
                             >
                                 <div class="flex flex-col">
                                     <p class="font-medium text-gray-800">{{ user.name }}</p>
@@ -68,24 +123,29 @@ const page = usePage<Props>();
                                 </div>
                             </div>
 
-                            <PaginationWrapper :data="page.props.users" />
+                            <PaginationWrapper v-if="page.props?.users?.data.length > 0" :data="page.props.users" />
                         </Deferred>
                     </div>
                 </div>
-                <div class="split-child split-right">
+                <div id="user-details" class="split-child split-right">
                     <div class="flex items-center justify-between border-b border-gray-200 p-4 text-lg">
                         <h2>Users Details</h2>
-                        <Button class="hidden" varian="primary" disabled title="Coming Soon...">
+                        <div id="user-details-action-container">
+                            <!--  -->
+                        </div>
+                        <!-- <Button class="" varian="primary" disabled title="Coming Soon...">
                             <Save class="size-4" />
                             Save
-                        </Button>
+                        </Button> -->
                     </div>
 
                     <div class="p-4">
-                        <div class="flex h-64 flex-col items-center justify-center text-gray-500">
+                        <div v-if="!action.label" class="flex h-64 flex-col items-center justify-center text-gray-500">
                             <Users class="size-12" />
                             <p class="text-lg">Select a user to view or edit details</p>
                         </div>
+
+                        <UserAddEdit v-else :user="action.user" @close="action = { label: undefined, user: undefined }" />
                     </div>
                 </div>
             </div>

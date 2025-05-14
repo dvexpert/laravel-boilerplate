@@ -21,6 +21,7 @@ namespace App\Models{
      * @property string $guard_name
      * @property Carbon|null $created_at
      * @property Carbon|null $updated_at
+     * @property-read mixed $name_label
      * @property-read Collection<int, Permission> $permissions
      * @property-read int|null $permissions_count
      * @property-read Collection<int, User> $users
@@ -62,7 +63,7 @@ namespace App\Models{
      * @property string|null $remember_token
      * @property Carbon|null $created_at
      * @property Carbon|null $updated_at
-     * @property-read mixed $name
+     * @property-read string $name
      * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
      * @property-read int|null $notifications_count
      * @property-read Collection<int, Permission> $permissions

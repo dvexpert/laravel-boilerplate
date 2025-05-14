@@ -41,12 +41,14 @@ const showPassword = ref(false);
 
 onMounted(() => {
     if (props.user) {
+        form.clearErrors();
         setUser(props.user)
     }
 });
 
 watch(() => props.user, () => {
     if (props.user) {
+        form.clearErrors();
         setUser(props.user)
     } else {
         form.reset();

@@ -2,10 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Inspiring;
+use Spatie\Permission\Models\Permission;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -39,12 +41,21 @@ class HandleInertiaRequests extends Middleware
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
-        return [
+        /** @var User $user */
+        $user = $request->user();
+
+        $data = [
             ...parent::share($request),
             'name'  => config('app.name'),
             'quote' => ['message' => trim((string) $message), 'author' => trim((string) $author)],
             'auth'  => [
-                'user' => $request->user(),
+                'user' => $user,
+                'can'  => $user?->getPermissionsViaRoles()
+                    ->mapWithKeys(function (Permission $permission) use ($user) {
+                        // TODO: Right now only allowed permissions are added in the array, but instead
+                        // It Should have all permissions and allowed permission with value true and false otherwise.
+                        return [$permission['name'] => $user->can($permission['name'])];
+                    }),
             ],
             'ziggy' => [
                 ...(new Ziggy)->toArray(),
@@ -52,5 +63,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
+
+        return $data;
     }
 }

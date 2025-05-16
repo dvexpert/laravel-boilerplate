@@ -6,6 +6,8 @@
 @source '../../storage/framework/views/*.php';
 
 @custom-variant dark (&:is(.dark *));
+@import 'vue3-toastify/dist/index.css';
+
 
 @theme inline {
     /* --font-sans: Instrument Sans, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; */

@@ -10,6 +10,7 @@ import { SharedData, User } from '@/types';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { Eye, EyeOff, Save, Trash, X } from 'lucide-vue-next';
 import { onMounted, ref, watch } from 'vue';
+import { toast } from 'vue3-toastify';
 
 interface Props {
     user?: User;
@@ -76,6 +77,12 @@ const submit = () => {
     form.submit(method, url, {
         onSuccess: () => {
             close();
+
+            toast(`User ${props.user ? 'updated' : 'created'} successfully.`, {
+                type: props.user ? 'info' : 'success',
+                autoClose: 2000,
+                position: 'top-right',
+            });
         },
     });
 };
@@ -93,6 +100,12 @@ const deleteUser = () => {
         form.delete(route('admin.user.destroy', props.user?.id), {
             onSuccess: () => {
                 close();
+
+                toast('User deleted successfully.', {
+                    type: 'success',
+                    autoClose: 2000,
+                    position: 'top-right',
+                });
             },
         });
     }

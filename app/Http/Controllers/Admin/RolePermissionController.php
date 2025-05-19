@@ -56,6 +56,9 @@ class RolePermissionController extends Controller
         }
 
         return back()
-            ->with('success', 'Role permissions updated successfully.');
+            ->with([
+                'success' => true,
+                'message' => 'Role permissions updated successfully.',
+            ]);
     }
 }

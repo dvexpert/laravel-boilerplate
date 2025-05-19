@@ -60,12 +60,6 @@ const submit = () => {
     form.submit('put', url, {
         onSuccess: () => {
             close();
-
-            toast('Role updated successfully.', {
-                type: 'success',
-                autoClose: 2000,
-                position: 'top-right',
-            });
         },
     });
 };

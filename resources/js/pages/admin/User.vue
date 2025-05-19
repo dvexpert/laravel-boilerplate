@@ -5,6 +5,8 @@ import UserAddEdit from '@/components/ui/admin/user/UserAddEdit.vue';
 import UserListSkeltonLoader from '@/components/ui/admin/user/UserListSkeltonLoader.vue';
 import { Button } from '@/components/ui/button';
 import { PaginationWrapper } from '@/components/ui/pagination';
+import { useUserCan } from '@/composables/useUserCan';
+import { PermissionEnum } from '@/enums/PermissionEnum';
 import { UserStatusEnum } from '@/enums/UserStatusEnum';
 import AdminLayout from '@/layouts/admin/Layout.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -22,6 +24,8 @@ interface fetchUsersParams {
     per_page?: number;
     page?: number;
 }
+
+const { can } = useUserCan();
 
 const page = usePage<Props>();
 
@@ -67,7 +71,7 @@ const editUser = (user: User) => {
                 <div class="split-child split-left">
                     <div class="flex items-center justify-between border-b border-gray-200 p-4 text-lg">
                         <h2>Users</h2>
-                        <Button varian="primary" @click="action = { label: 'create', user: undefined }">
+                        <Button v-if="can(PermissionEnum.USER_CREATE)" varian="primary" @click="action = { label: 'create', user: undefined }">
                             <UserPlus class="size-4" />
                         </Button>
                     </div>
@@ -90,13 +94,20 @@ const editUser = (user: User) => {
                             <div
                                 v-for="(user, index) in page.props?.users?.data"
                                 :key="user.id"
-                                class="flex cursor-pointer items-center justify-between p-4 hover:bg-gray-50"
+                                class="flex items-center justify-between p-4 hover:bg-gray-50"
                                 :class="{
                                     'border-b border-gray-200': index < page.props?.users?.data.length - 1,
+                                    'cursor-pointer': can(PermissionEnum.USER_UPDATE),
                                 }"
                                 role="button"
                                 aria-label="Edit user"
-                                @click="editUser(user)"
+                                @click="
+                                    () => {
+                                        if (can(PermissionEnum.USER_UPDATE)) {
+                                            editUser(user);
+                                        }
+                                    }
+                                "
                             >
                                 <div class="flex flex-col">
                                     <p class="font-medium text-gray-800">{{ user.name }}</p>

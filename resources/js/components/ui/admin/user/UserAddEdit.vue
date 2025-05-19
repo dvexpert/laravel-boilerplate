@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
+import { useUserCan } from '@/composables/useUserCan';
+import { PermissionEnum } from '@/enums/PermissionEnum';
 import { RoleEnum } from '@/enums/RoleEnum';
 import { UserStatusEnum } from '@/enums/UserStatusEnum';
 import { SharedData, User } from '@/types';
@@ -16,6 +18,7 @@ interface Props {
     user?: User;
 }
 
+const { can } = useUserCan()
 const page = usePage<SharedData>();
 const props = defineProps<Props>();
 
@@ -80,12 +83,6 @@ const submit = () => {
     form.submit(method, url, {
         onSuccess: () => {
             close();
-
-            toast(`User ${props.user ? 'updated' : 'created'} successfully.`, {
-                type: props.user ? 'info' : 'success',
-                autoClose: 2000,
-                position: 'top-right',
-            });
         },
     });
 };
@@ -103,12 +100,6 @@ const deleteUser = () => {
         form.delete(route('admin.user.destroy', props.user?.id), {
             onSuccess: () => {
                 close();
-
-                toast('User deleted successfully.', {
-                    type: 'success',
-                    autoClose: 2000,
-                    position: 'top-right',
-                });
             },
         });
     }
@@ -214,7 +205,7 @@ const deleteUser = () => {
                     <Teleport to="#user-details-action-container">
                         <div class="flex items-center gap-2">
                             <Button
-                                v-if="user && page.props.auth.user.id !== user.id"
+                                v-if="user && page.props.auth.user.id !== user.id && can(PermissionEnum.USER_DELETE)"
                                 variant="destructive"
                                 size="sm"
                                 :disabled="form.processing"
@@ -227,7 +218,7 @@ const deleteUser = () => {
                                 <X class="size-4" />
                                 Cancel
                             </Button>
-                            <Button :disabled="form.processing" size="sm" @click="submit">
+                            <Button v-if="can(PermissionEnum.USER_CREATE) || can(PermissionEnum.USER_UPDATE)" :disabled="form.processing" size="sm" @click="submit">
                                 <Save class="size-4" />
                                 {{ user ? 'Update' : 'Create' }}
                             </Button>

@@ -38,7 +38,7 @@ onMounted(() => {
         searchField.value = params.get('search') ?? '';
     }
 
-    watchDebounced([searchField, perPage], fetchUsers, { debounce: 300 });
+    watchDebounced(() => [searchField.value, perPage.value], fetchUsers, { debounce: 300 });
 });
 
 const fetchUsers = () => {
@@ -74,7 +74,7 @@ const editUser = (user: User) => {
 
                     <div class="flex flex-col">
                         <div class="flex items-center justify-between gap-2 p-2">
-                            <SearchInput class="w-full" />
+                            <SearchInput v-model:search-field="searchField" class="w-full" />
                             <PerPage v-model="perPage" class="max-w-32 min-w-32" />
                         </div>
 

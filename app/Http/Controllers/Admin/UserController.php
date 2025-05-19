@@ -9,6 +9,7 @@ use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Enums\{RoleEnum, UserStatusEnum};
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 class UserController extends Controller
 {
@@ -21,11 +22,11 @@ class UserController extends Controller
 
         return Inertia::render('admin/User', [
             'users' => (fn () => User::query()
-                ->when($search, function ($query) use ($search) {
-                    $query->where(function ($query) use ($search) {
-                        $query->where('first_name', 'like', "%{$search}%")
-                            ->orWhere('last_name', 'like', "%{$search}%")
-                            ->orWhere('email', 'like', "%{$search}%");
+                ->when($search, function ($query) use ($search): void {
+                    $query->where(function (EloquentBuilder $builder) use ($search): void {
+                        $builder->whereLike('first_name', "%{$search}%")
+                            ->orWhereLike('last_name', "%{$search}%")
+                            ->orWhereLike('email', "%{$search}%");
                     });
                 })
                 ->with(['roles'])->paginate($request->input('per_page', 5))->withQueryString()),
@@ -56,7 +57,7 @@ class UserController extends Controller
 
         $user->assignRole(RoleEnum::tryFrom($validated['role']));
 
-        return redirect()->back()->with([
+        return back()->with([
             'message' => 'User created successfully',
         ]);
     }
@@ -94,7 +95,7 @@ class UserController extends Controller
         }
         $user->syncRoles(RoleEnum::tryFrom($validated['role']));
 
-        return redirect()->back()->with([
+        return back()->with([
             'message' => 'User updated successfully',
         ]);
     }

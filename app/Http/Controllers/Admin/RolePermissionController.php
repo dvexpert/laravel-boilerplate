@@ -44,7 +44,7 @@ class RolePermissionController extends Controller
         Cache::forget('all_roles_with_allowed_permissions');
         app()->make(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        return redirect()->back()
+        return back()
             ->with('success', 'Role permissions updated successfully.');
     }
 }

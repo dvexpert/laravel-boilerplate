@@ -43,16 +43,14 @@ class HandleInertiaRequests extends Middleware
         /** @var User $user */
         $user = $request->user();
 
-        $data = [
+        return [
             ...parent::share($request),
             'name'  => config('app.name'),
             'quote' => ['message' => trim((string) $message), 'author' => trim((string) $author)],
             'auth'  => [
                 'user' => $user,
                 'can'  => $user?->getPermissionsViaRoles()
-                    ->mapWithKeys(function (Permission $permission) use ($user) {
-                        return [$permission['name'] => $user->can($permission['name'])];
-                    }),
+                    ->mapWithKeys(fn (Permission $permission) => [$permission['name'] => $user->can($permission['name'])]),
             ],
             'ziggy' => [
                 ...(new Ziggy)->toArray(),
@@ -60,7 +58,5 @@ class HandleInertiaRequests extends Middleware
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
-
-        return $data;
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Spatie\Permission\Models\Permission as SpatiePermission;
 
 /**
- * @mixin IdeHelperRole
+ * @mixin IdeHelperPermission
  */
 class Permission extends SpatiePermission implements \Spatie\Permission\Contracts\Permission
 {

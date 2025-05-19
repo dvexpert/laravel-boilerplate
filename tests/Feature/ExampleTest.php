@@ -9,6 +9,5 @@ it('returns a successful response', function (): void {
     $user = User::factory()->create();
 
     actingAs($user)
-        ->get('/')
-        ->assertStatus(200);
+        ->get('/')->assertOk();
 });

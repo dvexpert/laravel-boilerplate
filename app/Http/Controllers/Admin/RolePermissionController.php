@@ -45,7 +45,7 @@ class RolePermissionController extends Controller
         app()->make(PermissionRegistrar::class)->forgetCachedPermissions();
 
         $user = $request->user();
-        if ($user->hasRole($role->name)) {
+        if ($user->hasRole($role)) {
             $user->refresh();
             Inertia::share('auth', [
                 'user' => $user,

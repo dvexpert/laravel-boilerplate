@@ -3,12 +3,14 @@ import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import Label from '@/components/ui/label/Label.vue';
 import Switch from '@/components/ui/switch/Switch.vue';
-import { GroupedPermission, UserRole } from '@/types';
-import { router, useForm } from '@inertiajs/vue3';
+import { GroupedPermission, SharedData, UserRole } from '@/types';
+import { router, useForm, usePage } from '@inertiajs/vue3';
 import { Save, X } from 'lucide-vue-next';
 import { onMounted, watch } from 'vue';
 import { toast } from 'vue3-toastify';
 
+
+const page = usePage<SharedData>();
 const props = defineProps<{
     role: UserRole;
     permissions: GroupedPermission;
@@ -60,6 +62,10 @@ const submit = () => {
     form.submit('put', url, {
         onSuccess: () => {
             close();
+
+            if (page.props.auth.user.roles.some((role) => role.id === props.role.id)) {
+                window.location.reload();
+            }
         },
     });
 };

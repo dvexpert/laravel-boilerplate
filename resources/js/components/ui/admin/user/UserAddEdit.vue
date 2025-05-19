@@ -43,18 +43,21 @@ const showPassword = ref(false);
 onMounted(() => {
     if (props.user) {
         form.clearErrors();
-        setUser(props.user)
+        setUser(props.user);
     }
 });
 
-watch(() => props.user, () => {
-    if (props.user) {
-        form.clearErrors();
-        setUser(props.user)
-    } else {
-        form.reset();
-    }
-})
+watch(
+    () => props.user,
+    () => {
+        if (props.user) {
+            form.clearErrors();
+            setUser(props.user);
+        } else {
+            form.reset();
+        }
+    },
+);
 
 function setUser(user: User) {
     form.first_name = user.first_name;
@@ -71,7 +74,7 @@ const togglePassword = () => {
 };
 
 const submit = () => {
-    const method = (props.user ? 'put' : 'post');
+    const method = props.user ? 'put' : 'post';
     const url = props.user ? route('admin.user.update', props.user.id) : route('admin.user.store');
 
     form.submit(method, url, {
@@ -156,7 +159,7 @@ const deleteUser = () => {
                 </div>
                 <div class="flex flex-col gap-2">
                     <Label for="password">Password</Label>
-                    <div class="mt-1 relative w-full">
+                    <div class="relative mt-1 w-full">
                         <Input
                             id="password"
                             v-model="form.password"
@@ -166,7 +169,7 @@ const deleteUser = () => {
                             autocomplete="off"
                             :placeholder="`Password ${props.user ? '(Optional)' : ''}`"
                         />
-                        <span class="absolute end-0 inset-y-0 flex items-center justify-center">
+                        <span class="absolute inset-y-0 end-0 flex items-center justify-center">
                             <Button type="button" variant="ghost" @click.prevent="togglePassword">
                                 <Eye v-if="showPassword" class="size-4" />
                                 <EyeOff v-else class="size-4" />
@@ -177,7 +180,7 @@ const deleteUser = () => {
                 </div>
                 <div class="flex flex-col gap-2">
                     <Label for="password">Confirm Password</Label>
-                    <div class="mt-1 relative w-full">
+                    <div class="relative mt-1 w-full">
                         <Input
                             id="password_confirmation"
                             v-model="form.password_confirmation"
@@ -187,7 +190,7 @@ const deleteUser = () => {
                             autocomplete="off"
                             :placeholder="`Confirm Password ${props.user ? '(Optional)' : ''}`"
                         />
-                        <span class="absolute end-0 inset-y-0 flex items-center justify-center">
+                        <span class="absolute inset-y-0 end-0 flex items-center justify-center">
                             <Button type="button" variant="ghost" @click.prevent="togglePassword">
                                 <Eye v-if="showPassword" class="size-4" />
                                 <EyeOff v-else class="size-4" />
@@ -210,7 +213,13 @@ const deleteUser = () => {
                 <div class="flex items-center gap-4">
                     <Teleport to="#user-details-action-container">
                         <div class="flex items-center gap-2">
-                            <Button v-if="user && page.props.auth.user.id !== user.id" variant="destructive" size="sm" :disabled="form.processing" @click="deleteUser">
+                            <Button
+                                v-if="user && page.props.auth.user.id !== user.id"
+                                variant="destructive"
+                                size="sm"
+                                :disabled="form.processing"
+                                @click="deleteUser"
+                            >
                                 <Trash class="size-4" />
                                 Delete
                             </Button>
@@ -225,7 +234,7 @@ const deleteUser = () => {
                         </div>
                     </Teleport>
                     <!-- This is a hidden button to submit the form on enter -->
-                    <button type="submit" class="hidden invisible" aria-label="Submit">submit</button>
+                    <button type="submit" class="invisible hidden" aria-label="Submit">submit</button>
 
                     <Transition
                         enter-active-class="transition ease-in-out"

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useSidebar } from '@/components/ui/sidebar';
 import { SharedData, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { FilePen, Settings, Users } from 'lucide-vue-next';
+import { FilePen, Settings, ShieldUser, Users } from 'lucide-vue-next';
 
 const navItems: NavItem[] = [
     {
@@ -21,6 +21,11 @@ const navItems: NavItem[] = [
         title: 'System Configuration',
         href: '/admin/system-configuration',
         icon: Settings,
+    },
+    {
+        title: 'Roles & Permission',
+        href: '/admin/roles-permission',
+        icon: ShieldUser,
     },
 ];
 

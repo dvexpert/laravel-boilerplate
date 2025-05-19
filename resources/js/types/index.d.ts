@@ -35,7 +35,19 @@ export interface UserRole {
     guard_name: 'web';
     created_at: string;
     updated_at: string;
+    permissions: Permission[];
 }
+
+export interface Permission {
+    id: number;
+    name: RoleEnumType;
+    name_label: string;
+    guard_name: 'web';
+    created_at: string;
+    updated_at: string;
+}
+export interface GroupedPermission extends Record<string, Permission[]> {}
+
 export interface User {
     id: number;
     name: string;

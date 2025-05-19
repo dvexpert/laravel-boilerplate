@@ -2,12 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
 use Illuminate\Http\Request;
+use App\Models\{Permission, User};
 use Illuminate\Foundation\Inspiring;
-use Spatie\Permission\Models\Permission;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -52,8 +51,6 @@ class HandleInertiaRequests extends Middleware
                 'user' => $user,
                 'can'  => $user?->getPermissionsViaRoles()
                     ->mapWithKeys(function (Permission $permission) use ($user) {
-                        // TODO: Right now only allowed permissions are added in the array, but instead
-                        // It Should have all permissions and allowed permission with value true and false otherwise.
                         return [$permission['name'] => $user->can($permission['name'])];
                     }),
             ],

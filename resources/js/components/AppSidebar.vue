@@ -21,12 +21,14 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: '/',
         icon: LayoutGrid,
+        isAllowed: true,
     },
     {
         title: 'Admin',
         href: '/admin/template',
         icon: Settings,
         isActive: page.url.startsWith('/admin'),
+        isAllowed: true,
     },
 ];
 

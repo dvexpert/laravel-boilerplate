@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import Label from '@/components/ui/label/Label.vue';
 import Switch from '@/components/ui/switch/Switch.vue';
 import { GroupedPermission, UserRole } from '@/types';
-import { useForm } from '@inertiajs/vue3';
+import { router, useForm } from '@inertiajs/vue3';
 import { Save, X } from 'lucide-vue-next';
 import { onMounted, watch } from 'vue';
 import { toast } from 'vue3-toastify';
@@ -55,7 +55,7 @@ const submit = () => {
         return;
     }
 
-    const url = route('admin.role.update', props.role.id);
+    const url = route('admin.role-permission.update', props.role.id);
 
     form.submit('put', url, {
         onSuccess: () => {
@@ -69,6 +69,7 @@ const submit = () => {
         },
     });
 };
+
 const emit = defineEmits(['close']);
 const close = () => {
     form.reset();
@@ -80,7 +81,6 @@ const close = () => {
     <div>
         <form @submit.prevent="submit">
             <div class="">
-                <!-- render grouped permissions, need to set group name as bold and indent group permissions with padding left-4 -->
                 <div v-for="(group, groupName) in props.permissions" :key="groupName" class="flex flex-col">
                     <h3 class="py-3 text-lg font-bold capitalize">{{ groupName }}</h3>
                     <div class="flex flex-col gap-4 pl-4">

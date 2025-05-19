@@ -2,34 +2,45 @@
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { useSidebar } from '@/components/ui/sidebar';
+import { useUserCan } from '@/composables/useUserCan';
+import { PermissionEnum } from '@/enums/PermissionEnum';
 import { SharedData, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import { FilePen, Settings, ShieldUser, Users } from 'lucide-vue-next';
+import { computed } from 'vue';
+
+const { can } = useUserCan();
+
+const page = usePage<SharedData>();
 
 const navItems: NavItem[] = [
     {
         title: 'Manage Templates',
         href: '/admin/template',
         icon: FilePen,
+        isAllowed: true,
     },
     {
         title: 'User Management',
         href: '/admin/user',
         icon: Users,
+        isAllowed: PermissionEnum.USER_READ,
     },
     {
         title: 'System Configuration',
         href: '/admin/system-configuration',
         icon: Settings,
+        isAllowed: true,
     },
     {
         title: 'Roles & Permission',
         href: '/admin/roles-permission',
         icon: ShieldUser,
+        isAllowed: true,
     },
 ];
 
-const page = usePage<SharedData>();
+const computedNavItems = computed(() => navItems.filter((item) => can(item.isAllowed)));
 
 const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.location).pathname : '';
 const { isMobile } = useSidebar();
@@ -47,7 +58,7 @@ const { isMobile } = useSidebar();
             <aside class="w-full">
                 <nav class="flex space-y-1 space-x-0 border-b">
                     <Button
-                        v-for="item in navItems"
+                        v-for="item in computedNavItems"
                         :key="item.href"
                         variant="ghost"
                         :data-state="`${currentPath === item.href ? 'active' : ''}`"

@@ -1,32 +1,18 @@
 <script setup lang="ts">
-import RolePermissionEdit from '@/components/ui/admin/RolePermision/RolePermissionEdit.vue';
+import RolePermissionEdit from '@/components/ui/admin/RolePermission/RolePermissionEdit.vue';
 import AdminLayout from '@/layouts/admin/Layout.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { GroupedPermission, Permission, SharedData, UserRole } from '@/types';
-import { Head, useForm, usePage } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 import { FilePen, ShieldUser } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
+
 interface Props extends SharedData {
     roles: UserRole[];
     permissions: Permission[];
 }
 
-const form = useForm({
-    first_name: '',
-    last_name: '',
-    email: '',
-});
-
 const page = usePage<Props>();
-const selectedPermissions = ref<number[]>([]);
-const submit = () => {
-    // const url = page.props.user ? route('admin.user.update', page.props) : route('admin.user.store');
-    // form.submit(method, url, {
-    //     onSuccess: () => {
-    //         close();
-    //     },
-    // });
-};
 
 const editRole = ref<UserRole | null>(null);
 
@@ -47,6 +33,10 @@ const groupedPermissions = computed(() => {
 
     return grouped;
 });
+
+const handleEditRole = (role: UserRole | null) => {
+    editRole.value = role ? role : null;
+};
 </script>
 
 <template>
@@ -74,7 +64,7 @@ const groupedPermissions = computed(() => {
                             }"
                             role="button"
                             aria-label="Edit user"
-                            @click="editRole = role"
+                            @click="() => handleEditRole(role)"
                         >
                             <div class="flex flex-col">
                                 <p class="font-medium text-gray-800">{{ role.name_label }}</p>
@@ -104,10 +94,10 @@ const groupedPermissions = computed(() => {
 
                         <RolePermissionEdit
                             v-else
-                            :key="`${editRole.id}-${Math.floor(Math.random() * 1000)}`"
+                            :key="editRole.id"
                             :role="editRole"
                             :permissions="groupedPermissions"
-                            @close="editRole = null"
+                            @close="() => handleEditRole(null)"
                         />
                     </div>
                 </div>

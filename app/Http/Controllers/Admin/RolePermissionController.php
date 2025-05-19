@@ -44,6 +44,17 @@ class RolePermissionController extends Controller
         Cache::forget('all_roles_with_allowed_permissions');
         app()->make(PermissionRegistrar::class)->forgetCachedPermissions();
 
+        $user = $request->user();
+        if ($user->hasRole($role->name)) {
+            $user->refresh();
+            Inertia::share('auth', [
+                'user' => $user,
+                'can'  => $user?->getPermissionsViaRoles()
+                    ->mapWithKeys(fn (Permission $permission) => [$permission['name'] => $user->can($permission['name'])])
+                    ->all(),
+            ]);
+        }
+
         return back()
             ->with('success', 'Role permissions updated successfully.');
     }

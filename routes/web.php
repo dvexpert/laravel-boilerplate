@@ -22,7 +22,7 @@ Route::middleware(['auth'])->group(function (): void {
         Route::apiResource('/template', TemplateController::class);
         Route::apiResource('/user', UserController::class);
         Route::apiResource('/system-configuration', SystemConfigurationController::class);
-        Route::get('/roles-permission', (new RolePermissionController)->index(...))->name('role.index');
-        Route::put('/roles-permission/{role}', (new RolePermissionController)->update(...))->name('role.update');
+        Route::get('/roles-permission', (new RolePermissionController)->index(...))->name('role-permission.index');
+        Route::put('/roles-permission/{role}', (new RolePermissionController)->update(...))->name('role-permission.update');
     });
 });

@@ -1,3 +1,4 @@
+import { PermissionEnumType } from '@/enums/PermissionEnum';
 import { RoleEnumType } from '@/enums/RoleEnum';
 import { UserStatusEnumType } from '@/enums/UserStatusEnum';
 import type { PageProps } from '@inertiajs/core';
@@ -6,6 +7,7 @@ import type { Config } from 'ziggy-js';
 
 export interface Auth {
     user: User;
+    can: Partial<Record<PermissionEnumType, boolean>>;
 }
 
 export interface BreadcrumbItem {
@@ -18,6 +20,7 @@ export interface NavItem {
     href: string;
     icon?: LucideIcon;
     isActive?: boolean;
+    isAllowed: PermissionEnumType | boolean;
 }
 
 export interface SharedData extends PageProps {

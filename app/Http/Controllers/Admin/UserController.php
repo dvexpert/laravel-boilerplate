@@ -28,7 +28,7 @@ class UserController extends Controller
                             ->orWhere('email', 'like', "%{$search}%");
                     });
                 })
-                ->with(['roles'])->paginate(5)->withQueryString()),
+                ->with(['roles'])->paginate($request->input('per_page', 5))->withQueryString()),
         ]);
     }
 

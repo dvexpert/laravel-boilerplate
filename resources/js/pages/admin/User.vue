@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import PerPage from '@/components/PerPage.vue';
+import SearchInput from '@/components/SearchInput.vue';
 import UserAddEdit from '@/components/ui/admin/user/UserAddEdit.vue';
 import UserListSkeltonLoader from '@/components/ui/admin/user/UserListSkeltonLoader.vue';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { PaginationWrapper } from '@/components/ui/pagination';
 import { UserStatusEnum } from '@/enums/UserStatusEnum';
 import AdminLayout from '@/layouts/admin/Layout.vue';
@@ -10,15 +11,22 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Paginated, SharedData, User } from '@/types';
 import { Deferred, Head, router, usePage } from '@inertiajs/vue3';
 import { watchDebounced } from '@vueuse/core';
-import { FilePen, UserPlus, Users, X } from 'lucide-vue-next';
+import { FilePen, UserPlus, Users } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
 
 interface Props extends SharedData {
     users: Paginated<User[]>;
 }
+interface fetchUsersParams {
+    search?: string;
+    per_page?: number;
+    page?: number;
+}
+
 const page = usePage<Props>();
 
 const searchField = ref<string>('');
+const perPage = ref<number>(page.props.users.per_page);
 const action = ref<{ label?: 'create' | 'edit'; user?: User }>({
     label: undefined,
     user: undefined,
@@ -30,25 +38,19 @@ onMounted(() => {
         searchField.value = params.get('search') ?? '';
     }
 
-    watchDebounced(
-        searchField,
-        () => {
-            if (searchField.value === '') {
-                router.visit(route('admin.user.index'), { preserveState: true, preserveScroll: true, only: ['users'] });
-                return;
-            }
-
-            router.get(
-                route('admin.user.index'),
-                {
-                    search: searchField.value,
-                },
-                { preserveState: true, preserveScroll: true, only: ['users'] },
-            );
-        },
-        { debounce: 300 },
-    );
+    watchDebounced([searchField, perPage], fetchUsers, { debounce: 300 });
 });
+
+const fetchUsers = () => {
+    const params: fetchUsersParams = {};
+    if (searchField.value !== '') params.search = searchField.value;
+    if (perPage.value !== 5) {
+        params.per_page = perPage.value;
+        params.page = 1;
+    }
+
+    router.get(route('admin.user.index'), { ...params }, { preserveState: true, preserveScroll: true, only: ['users'] });
+};
 
 const editUser = (user: User) => {
     action.value.label = 'edit';
@@ -71,15 +73,9 @@ const editUser = (user: User) => {
                     </div>
 
                     <div class="flex flex-col">
-                        <div class="p-2">
-                            <div class="relative w-full">
-                                <Input v-model="searchField" placeholder="Search users..." />
-                                <span class="absolute inset-y-0 end-0 flex items-center justify-center">
-                                    <Button type="button" variant="ghost" @click.prevent="searchField = ''">
-                                        <X class="size-4" />
-                                    </Button>
-                                </span>
-                            </div>
+                        <div class="flex items-center justify-between gap-2 p-2">
+                            <SearchInput class="w-full" />
+                            <PerPage v-model="perPage" class="max-w-32 min-w-32" />
                         </div>
 
                         <Deferred data="users">

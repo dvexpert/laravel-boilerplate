@@ -224,6 +224,8 @@ const deleteUser = () => {
                             </Button>
                         </div>
                     </Teleport>
+                    <!-- This is a hidden button to submit the form on enter -->
+                    <button type="submit" class="hidden invisible" aria-label="Submit">submit</button>
 
                     <Transition
                         enter-active-class="transition ease-in-out"

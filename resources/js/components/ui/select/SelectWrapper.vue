@@ -13,14 +13,14 @@ import { twMerge } from 'tailwind-merge';
 interface Props {
     placeholder: string;
     items: {
-        value: string;
+        value: string|number;
         label: string;
     }[];
     groupLabel?: string;
     class?: string;
 }
 const props = defineProps<Props>();
-const valueModel = defineModel({ type: String });
+const valueModel = defineModel<string|number>();
 </script>
 
 <template>

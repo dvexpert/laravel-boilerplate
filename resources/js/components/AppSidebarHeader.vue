@@ -38,7 +38,7 @@ const handleLogout = () => {
 
 <template>
     <header
-        class="border-sidebar-border/70 h-16/ group-has-data-[collapsible=icon]/sidebar-wrapper:h-12/ sticky top-0 flex shrink-0 items-center gap-2 border-b p-4 px-6 transition-[width,height] ease-linear md:px-4"
+        class="border-sidebar-border/70 h-16/ group-has-data-[collapsible=icon]/sidebar-wrapper:h-12/ sticky top-0 z-[99] flex shrink-0 items-center gap-2 border-b p-4 px-6 transition-[width,height] ease-linear md:px-4"
     >
         <div class="flex items-center gap-2">
             <!-- <SidebarTrigger class="-ml-1" /> -->

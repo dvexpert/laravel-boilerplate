@@ -19,13 +19,23 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-v
 import { PaginationList, PaginationListItem } from 'reka-ui';
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
+import { ref, watch } from 'vue';
 
 const props = defineProps<{data: Paginated}>()
+
+const currentPage = ref(props.data.current_page)
+watch(
+  () => props.data.current_page,
+  (newPage) => {
+    currentPage.value = newPage
+  },
+  { immediate: true }
+)
 
 </script>
 
 <template>
-  <Pagination v-slot="{ page }" :items-per-page="props.data.per_page" :total="props.data.total" :sibling-count="1" show-edges :default-page="props.data.current_page" class="py-4">
+  <Pagination v-slot="{ page }" v-model:page="currentPage" :items-per-page="props.data.per_page" :total="props.data.total" :sibling-count="0" show-edges :default-page="props.data.current_page" class="py-4">
     <PaginationList v-slot="{ items }" class="flex items-center gap-1">
       <!-- <PaginationFirst preserve-scroll prefetch :as="Link" :href="route('admin.user.index', { page: 1 })" /> -->
         <Button preserve-scroll prefetch :as="props.data.current_page !== 1 ? Link : undefined" :href="props.data.first_page_url" :class="cn(buttonVariants({ variant: 'outline', size:'default' }), 'gap-1 px-2.5 sm:pr-2.5')" variant="ghost" :disabled="props.data.current_page === 1">

@@ -30,10 +30,8 @@ export interface SharedData extends PageProps {
     ziggy: Config & { location: string };
     sidebarOpen: boolean;
     flash: {
-        message: {
-            success: string;
-            message: string;
-        };
+        success: string;
+        message: string;
     };
 }
 

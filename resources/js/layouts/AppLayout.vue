@@ -15,9 +15,9 @@ withDefaults(defineProps<Props>(), {
 watch(
     () => usePage<SharedData>().props.flash,
     (flash) => {
-        if (flash.message && flash.message.message) {
-            toast(flash.message.message, {
-                type: flash.message.success ? 'success' : 'error',
+        if (flash.message && flash.message) {
+            toast(flash.message, {
+                type: flash.message ? 'success' : 'error',
             });
         }
     },
@@ -26,9 +26,9 @@ watch(
 
 onMounted(() => {
     const flash = usePage<SharedData>().props.flash;
-    if (flash.message.message) {
-        toast(flash.message.message, {
-            type: flash.message.success ? 'success' : 'error',
+    if (flash.message) {
+        toast(flash.message, {
+            type: flash.message ? 'success' : 'error',
         });
     }
 });

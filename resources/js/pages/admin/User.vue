@@ -117,7 +117,14 @@ const editUser = (user: User) => {
                             >
                                 <div class="flex flex-col">
                                     <div class="mb-3 flex gap-3">
-                                        <p class="font-medium text-gray-800">{{ user.name }}</p>
+                                        <p
+                                            class="font-medium text-gray-800"
+                                            :class="{
+                                                'line-through': user.deleted_at,
+                                            }"
+                                        >
+                                            {{ user.name }}
+                                        </p>
                                         <span
                                             class="rounded px-2 py-1 text-xs capitalize"
                                             :class="{

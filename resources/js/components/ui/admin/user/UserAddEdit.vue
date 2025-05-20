@@ -10,7 +10,7 @@ import { RoleEnum } from '@/enums/RoleEnum';
 import { UserStatusEnum } from '@/enums/UserStatusEnum';
 import { SharedData, User } from '@/types';
 import { useForm, usePage } from '@inertiajs/vue3';
-import { Eye, EyeOff, FileClock, Save, Trash, X } from 'lucide-vue-next';
+import { Eye, EyeOff, FileClock, RotateCcw, Save, Trash, X } from 'lucide-vue-next';
 import { onMounted, ref, watch } from 'vue';
 
 interface Props {
@@ -95,7 +95,7 @@ const deleteUser = () => {
         return;
     }
 
-    if (confirm('Are you sure you want to delete this user?')) {
+    if (confirm(`Are you sure you want to ${props.user?.deleted_at ? 'restore' : 'delete'} this user?`)) {
         form.delete(route('admin.user.destroy', props.user?.id), {
             onSuccess: () => {
                 close();
@@ -210,7 +210,7 @@ const showAuditLogs = ref(false);
                                 Audit Logs
                             </Button>
                             <Button
-                                v-if="user && page.props.auth.user.id !== user.id && can(PermissionEnum.USER_DELETE)"
+                                v-if="user && page.props.auth.user.id !== user.id && can(PermissionEnum.USER_DELETE) && !user.deleted_at"
                                 variant="destructive"
                                 size="sm"
                                 :disabled="form.processing"
@@ -218,6 +218,16 @@ const showAuditLogs = ref(false);
                             >
                                 <Trash class="size-4" />
                                 Delete
+                            </Button>
+                            <Button
+                                v-if="user && page.props.auth.user.id !== user.id && can(PermissionEnum.USER_DELETE) && user.deleted_at"
+                                variant="outline"
+                                size="sm"
+                                :disabled="form.processing"
+                                @click="deleteUser"
+                            >
+                                <RotateCcw class="size-4" />
+                                Restore
                             </Button>
                             <Button variant="secondary" size="sm" :disabled="form.processing" @click="close">
                                 <X class="size-4" />

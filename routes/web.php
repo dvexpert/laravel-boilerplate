@@ -20,8 +20,8 @@ Route::middleware(['auth'])->group(function (): void {
 
     Route::name('admin.')->prefix('admin')->group(function (): void {
         Route::apiResource('/template', TemplateController::class);
-        Route::apiResource('/user', UserController::class);
-        Route::get('/user/{user}/audits', (new UserController)->audits(...))->name('user.audits');
+        Route::apiResource('/user', UserController::class)->withTrashed(['destroy', 'index', 'update']);
+        Route::get('/user/{user}/audits', (new UserController)->audits(...))->name('user.audits')->withTrashed();
         Route::apiResource('/system-configuration', SystemConfigurationController::class);
         Route::get('/roles-permission', (new RolePermissionController)->index(...))->name('role-permission.index');
         Route::put('/roles-permission/{role}', (new RolePermissionController)->update(...))->name('role-permission.update');

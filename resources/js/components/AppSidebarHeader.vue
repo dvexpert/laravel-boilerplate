@@ -78,7 +78,7 @@ const handleLogout = () => {
                             </div>
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" class="w-56">
+                    <DropdownMenuContent align="end" class="w-56" :side-offset="15">
                         <UserMenuContent :user="auth.user" :only-profile="true" />
                     </DropdownMenuContent>
                 </DropdownMenu>

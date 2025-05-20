@@ -5,6 +5,9 @@ namespace App\Models;
 use OwenIt\Auditing\Models\Audit as BaseAudit;
 use OwenIt\Auditing\Contracts\Audit as AuditContract;
 
+/**
+ * @mixin IdeHelperAudit
+ */
 class Audit extends BaseAudit implements AuditContract
 {
     public function casts(): array

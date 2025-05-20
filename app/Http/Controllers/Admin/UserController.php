@@ -37,7 +37,10 @@ class UserController extends Controller
                             ->orWhereLike('email', "%{$search}%");
                     });
                 })
-                ->with(['roles'])->paginate($request->input('per_page', 5))->withQueryString()),
+                ->with(['roles'])
+                ->withTrashed()
+                ->paginate($request->input('per_page', 5))
+                ->withQueryString()),
         ]);
     }
 
@@ -142,11 +145,17 @@ class UserController extends Controller
                 ]);
         }
 
-        $user->delete();
+        if ($user->trashed()) {
+            // Restore
+            $user->restore();
+        } else {
+            // Soft delete
+            $user->delete();
+        }
 
         return redirect()->to(route('admin.user.index'))->with([
             'success' => true,
-            'message' => 'User deleted successfully',
+            'message' => 'User ' . ($user->trashed() ? 'restored' : 'deleted') . ' successfully',
         ]);
     }
 

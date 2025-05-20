@@ -59,7 +59,8 @@ class UserController extends Controller
             'last_name'  => 'required|string|max:255',
             'email'      => 'required|string|email|max:255|unique:users',
             'password'   => 'required|string|min:8|confirmed',
-            'role'       => ['required', Rule::enum(RoleEnum::class)],
+            'role'       => ['required', 'array'],
+            'role.*'     => [Rule::enum(RoleEnum::class)],
             'status'     => ['required', Rule::enum(UserStatusEnum::class)],
         ]);
 
@@ -71,7 +72,8 @@ class UserController extends Controller
             'status'     => $validated['status'],
         ]);
 
-        $user->assignRole(RoleEnum::tryFrom($validated['role']));
+        // $user->assignRole(RoleEnum::tryFrom($validated['role']));
+        $user->syncRoles($validated['role']);
 
         return back()->with([
             'success' => true,
@@ -103,7 +105,8 @@ class UserController extends Controller
                 Rule::unique('users')->ignore($user->id),
             ],
             'password' => 'nullable|string|min:8|confirmed',
-            'role'     => ['required', Rule::enum(RoleEnum::class)],
+            'role'     => ['required', 'array'],
+            'role.*'   => [Rule::enum(RoleEnum::class)],
             'status'   => ['required', Rule::enum(UserStatusEnum::class)],
         ]);
 
@@ -118,7 +121,13 @@ class UserController extends Controller
                 'password' => Hash::make($validated['password']),
             ]);
         }
-        $user->syncRoles(RoleEnum::tryFrom($validated['role']));
+        // $user->syncRoles(RoleEnum::tryFrom($validated['role']));
+        $user->syncRoles(
+            collect($validated['role']) // or just: collect($roles)
+                ->map(fn ($role) => RoleEnum::tryFrom($role))
+                ->filter()
+                ->all()
+        );
 
         return back()->with([
             'success' => true,

@@ -122,7 +122,7 @@ const editUser = (user: User) => {
                                             }"
                                             >{{ user.status }}</span
                                         >
-                                        <span class="ml-2 text-xs text-gray-500">{{ user.roles[0].name_label }}</span>
+                                        <span class="ml-2 text-xs text-gray-500">{{ user.roles.map((role) => role.name_label).join(', ') }}</span>
                                     </div>
                                 </div>
                                 <div>

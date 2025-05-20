@@ -28,7 +28,7 @@ const form = useForm({
     email: '',
     password: undefined,
     password_confirmation: undefined,
-    role: '',
+    role: [] as string[],
     status: String(UserStatusEnum.ACTIVE),
 });
 
@@ -68,7 +68,7 @@ function setUser(user: User) {
     form.email = user.email;
     form.password = undefined;
     form.password_confirmation = undefined;
-    form.role = user.roles[0].name.toString();
+    form.role = user.roles.map(role => role.name);
     form.status = String(user.status);
 }
 
@@ -192,7 +192,7 @@ const deleteUser = () => {
                 </div>
                 <div class="flex flex-col gap-2">
                     <Label for="role">Role</Label>
-                    <Select v-model="form.role" :items="roles" placeholder="Role" class="w-full"></Select>
+                    <Select v-model="form.role" :items="roles" placeholder="Role" class="w-full" multiple></Select>
                     <InputError :message="form.errors.role" />
                 </div>
                 <div class="flex flex-col gap-2">

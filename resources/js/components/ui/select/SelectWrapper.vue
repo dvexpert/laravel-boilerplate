@@ -20,7 +20,7 @@ interface Props {
     class?: string;
 }
 const props = defineProps<Props>();
-const valueModel = defineModel<string|number>();
+const valueModel = defineModel<string|number|string[]>();
 </script>
 
 <template>

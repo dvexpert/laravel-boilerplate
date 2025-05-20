@@ -45,7 +45,7 @@ const handleEditRole = (role: UserRole | null) => {
         <AdminLayout>
             <div class="split-container min-h-[70vh]">
                 <div class="split-child split-left">
-                    <div class="flex items-center justify-between border-b border-gray-200 p-4 text-lg">
+                    <div class="flex min-h-[69px] items-center justify-between border-b border-gray-200 p-4 text-lg">
                         <h2>Roles</h2>
                     </div>
 
@@ -76,7 +76,7 @@ const handleEditRole = (role: UserRole | null) => {
                     </div>
                 </div>
                 <div id="user-details" class="split-child split-right">
-                    <div class="flex items-center justify-between border-b border-gray-200 p-4 text-lg">
+                    <div class="flex min-h-[69px] items-center justify-between border-b border-gray-200 p-4 text-lg">
                         <h2>
                             Role Permissions
                             <span v-if="editRole" class="text-sm text-gray-500">({{ editRole.name_label }})</span>

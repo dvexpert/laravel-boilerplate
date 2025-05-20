@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import PerPage from '@/components/PerPage.vue';
 import SearchInput from '@/components/SearchInput.vue';
+import AuditLog from '@/components/ui/admin/audit-logs/AuditLog.vue';
 import UserAddEdit from '@/components/ui/admin/user/UserAddEdit.vue';
 import UserListSkeltonLoader from '@/components/ui/admin/user/UserListSkeltonLoader.vue';
 import { Button } from '@/components/ui/button';
@@ -35,6 +36,10 @@ const action = ref<{ label?: 'create' | 'edit'; user?: User }>({
     label: undefined,
     user: undefined,
 });
+const showAuditLogs = ref(false);
+const toggleAuditLogs = (value?: boolean) => {
+    showAuditLogs.value = typeof value === 'boolean' ? value : !showAuditLogs.value;
+};
 
 onMounted(() => {
     const params = new URLSearchParams(window.location.search);
@@ -69,7 +74,7 @@ const editUser = (user: User) => {
         <AdminLayout>
             <div class="split-container min-h-[70vh]">
                 <div class="split-child split-left">
-                    <div class="flex items-center justify-between border-b border-gray-200 p-4 text-lg">
+                    <div class="flex min-h-[69px] items-center justify-between border-b border-gray-200 p-4 text-lg">
                         <h2>Users</h2>
                         <Button v-if="can(PermissionEnum.USER_CREATE)" varian="primary" @click="action = { label: 'create', user: undefined }">
                             <UserPlus class="size-4" />
@@ -98,6 +103,7 @@ const editUser = (user: User) => {
                                 :class="{
                                     'border-b border-gray-200': index < page.props?.users?.data.length - 1,
                                     'cursor-pointer': can(PermissionEnum.USER_UPDATE),
+                                    'bg-gray-100': action.user && action.user.id === user.id,
                                 }"
                                 role="button"
                                 aria-label="Edit user"
@@ -143,8 +149,8 @@ const editUser = (user: User) => {
                     </div>
                 </div>
                 <div id="user-details" class="split-child split-right">
-                    <div class="flex items-center justify-between border-b border-gray-200 p-4 text-lg">
-                        <h2>Users Details</h2>
+                    <div class="flex min-h-[69px] items-center justify-between border-b border-gray-200 p-4 text-lg">
+                        <h2>Users {{ !showAuditLogs ? 'Details' : 'Audit logs' }}</h2>
                         <div id="user-details-action-container">
                             <!--  -->
                         </div>
@@ -155,12 +161,26 @@ const editUser = (user: User) => {
                     </div>
 
                     <div class="p-4">
-                        <div v-if="!action.label" class="flex h-64 flex-col items-center justify-center text-gray-500">
-                            <Users class="size-12" />
-                            <p class="text-lg">Select a user to view or edit details</p>
-                        </div>
+                        <Transition name="fade" mode="out-in">
+                            <div v-if="!action.label" class="flex h-64 flex-col items-center justify-center text-gray-500">
+                                <Users class="size-12" />
+                                <p class="text-lg">Select a user to view or edit details</p>
+                            </div>
 
-                        <UserAddEdit v-else :user="action.user" @close="action = { label: undefined, user: undefined }" />
+                            <UserAddEdit
+                                v-else-if="action.label && !showAuditLogs"
+                                :user="action.user"
+                                @close="action = { label: undefined, user: undefined }"
+                                @toggle-audit-logs="toggleAuditLogs"
+                            />
+
+                            <AuditLog
+                                v-else-if="action.label && showAuditLogs"
+                                :user="action.user"
+                                @close="toggleAuditLogs(false)"
+                                @toggle-audit-logs="toggleAuditLogs"
+                            ></AuditLog>
+                        </Transition>
                     </div>
                 </div>
             </div>

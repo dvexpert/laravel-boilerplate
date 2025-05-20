@@ -8,7 +8,6 @@
 @custom-variant dark (&:is(.dark *));
 @import 'vue3-toastify/dist/index.css';
 
-
 @theme inline {
     /* --font-sans: Instrument Sans, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; */
     --font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', Segoe UI Symbol, 'Noto Color Emoji';
@@ -174,7 +173,7 @@
     }
 
     body {
-        @apply bg-background text-foreground max-w-[1980px] mx-auto;
+        @apply bg-background text-foreground mx-auto max-w-[1980px];
     }
 }
 
@@ -196,4 +195,14 @@
     body main header {
         @apply bg-white;
     }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 150ms ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
 }

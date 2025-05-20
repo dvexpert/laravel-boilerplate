@@ -72,7 +72,6 @@ class UserController extends Controller
             'status'     => $validated['status'],
         ]);
 
-        // $user->assignRole(RoleEnum::tryFrom($validated['role']));
         $user->syncRoles($validated['role']);
 
         return back()->with([
@@ -121,13 +120,8 @@ class UserController extends Controller
                 'password' => Hash::make($validated['password']),
             ]);
         }
-        // $user->syncRoles(RoleEnum::tryFrom($validated['role']));
-        $user->syncRoles(
-            collect($validated['role']) // or just: collect($roles)
-                ->map(fn ($role) => RoleEnum::tryFrom($role))
-                ->filter()
-                ->all()
-        );
+
+        $user->syncRoles($validated['role']);
 
         return back()->with([
             'success' => true,

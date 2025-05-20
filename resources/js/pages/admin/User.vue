@@ -110,9 +110,8 @@ const editUser = (user: User) => {
                                 "
                             >
                                 <div class="flex flex-col">
-                                    <p class="font-medium text-gray-800">{{ user.name }}</p>
-                                    <p class="text-sm text-gray-500">{{ user.email }}</p>
-                                    <div class="mt-1 flex items-center">
+                                    <div class="mb-3 flex gap-3">
+                                        <p class="font-medium text-gray-800">{{ user.name }}</p>
                                         <span
                                             class="rounded px-2 py-1 text-xs capitalize"
                                             :class="{
@@ -122,7 +121,16 @@ const editUser = (user: User) => {
                                             }"
                                             >{{ user.status }}</span
                                         >
-                                        <span class="ml-2 text-xs text-gray-500">{{ user.roles.map((role) => role.name_label).join(', ') }}</span>
+                                    </div>
+                                    <p class="text-sm text-gray-500">{{ user.email }}</p>
+                                    <div class="mt-3 flex items-center gap-3">
+                                        <span
+                                            v-for="role in user.roles"
+                                            :key="`role_tag_${role.name_label}`"
+                                            class="rounded bg-indigo-600 px-2 py-1 text-xs text-white capitalize"
+                                            >{{ role.name_label }}</span
+                                        >
+                                        <!-- <span class="ml-2 text-xs text-gray-500">{{ user.roles.map((role) => role.name_label).join(', ') }}</span> -->
                                     </div>
                                 </div>
                                 <div>

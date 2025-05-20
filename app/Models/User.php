@@ -59,6 +59,8 @@ class User extends Authenticatable implements AuditableContract
         return [
             'email_verified_at' => 'datetime',
             'password'          => 'hashed',
+            'created_at'        => 'datetime:d/m/Y H:i a',
+            'updated_at'        => 'datetime:d/m/Y H:i a',
         ];
     }
 

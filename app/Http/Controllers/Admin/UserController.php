@@ -149,4 +149,22 @@ class UserController extends Controller
             'message' => 'User deleted successfully',
         ]);
     }
+
+    public function audits(Request $request, User $user)
+    {
+        if (auth('web')->user()->cannot(PermissionEnum::USER_READ)) {
+            return redirect()->to(route('dashboard'))
+                ->with([
+                    'success' => false,
+                    'message' => 'You do not have permission to access this page.',
+                ]);
+        }
+
+        return response()->json([
+            'audits' => $user
+                ->audits()
+                ->with('user:id,first_name,last_name,email')
+                ->paginate($request->input('per_page', 5), pageName: 'user_audits'),
+        ]);
+    }
 }

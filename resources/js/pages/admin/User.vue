@@ -18,7 +18,7 @@ import { FilePen, UserPlus, Users } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
 
 interface Props extends SharedData {
-    users: Paginated<User[]>;
+    users: Paginated<User>;
 }
 interface fetchUsersParams {
     search?: string;
@@ -175,7 +175,7 @@ const editUser = (user: User) => {
                             />
 
                             <AuditLog
-                                v-else-if="action.label && showAuditLogs"
+                                v-else-if="action.user && action.label && showAuditLogs"
                                 :user="action.user"
                                 @close="toggleAuditLogs(false)"
                                 @toggle-audit-logs="toggleAuditLogs"

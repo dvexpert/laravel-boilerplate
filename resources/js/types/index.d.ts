@@ -56,7 +56,7 @@ export interface Permission {
 export interface GroupedPermission extends Record<string, Permission[]> {}
 
 export interface User {
-    id: number;
+    id: string;
     name: string;
     first_name: string;
     last_name: string;
@@ -72,7 +72,7 @@ export interface User {
 export type BreadcrumbItemType = BreadcrumbItem;
 
 export interface Paginated<T = {}> {
-    data: T;
+    data: T[];
     current_page: number;
     first_page_url: string;
     from: number;

@@ -3,7 +3,7 @@
 import { AuditLogs } from '@/components/ui/audit-logs';
 import Button from '@/components/ui/button/Button.vue';
 import { User } from '@/types';
-import { FileClock } from 'lucide-vue-next';
+import { FilePen } from 'lucide-vue-next';
 
 const props = defineProps<{ user: User }>();
 const emit = defineEmits(['toggle-audit-logs']);
@@ -17,8 +17,8 @@ const toggleAuditLogs = () => {
         <Teleport to="#user-details-action-container">
             <div class="flex items-center gap-2">
                 <Button variant="secondary" size="sm" @click="toggleAuditLogs">
-                    <FileClock class="size-4" />
-                    Audit Logs
+                    <FilePen class="size-4" />
+                    Back
                 </Button>
             </div>
         </Teleport>

@@ -17,7 +17,7 @@ watch(
     (flash) => {
         if (flash.message && flash.message) {
             toast(flash.message, {
-                type: flash.message ? 'success' : 'error',
+                type: flash.success ? 'success' : 'error',
             });
         }
     },
@@ -28,7 +28,7 @@ onMounted(() => {
     const flash = usePage<SharedData>().props.flash;
     if (flash.message) {
         toast(flash.message, {
-            type: flash.message ? 'success' : 'error',
+            type: flash.success ? 'success' : 'error',
         });
     }
 });

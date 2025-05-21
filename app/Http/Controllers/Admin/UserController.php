@@ -37,7 +37,10 @@ class UserController extends Controller
                             ->orWhereLike('email', "%{$search}%");
                     });
                 })
-                ->with(['roles'])->paginate($request->input('per_page', 5))->withQueryString()),
+                ->with(['roles'])
+                ->withTrashed()
+                ->paginate($request->input('per_page', 5))
+                ->withQueryString()),
         ]);
     }
 
@@ -59,7 +62,8 @@ class UserController extends Controller
             'last_name'  => 'required|string|max:255',
             'email'      => 'required|string|email|max:255|unique:users',
             'password'   => 'required|string|min:8|confirmed',
-            'role'       => ['required', Rule::enum(RoleEnum::class)],
+            'role'       => ['required', 'array'],
+            'role.*'     => [Rule::enum(RoleEnum::class)],
             'status'     => ['required', Rule::enum(UserStatusEnum::class)],
         ]);
 
@@ -71,7 +75,7 @@ class UserController extends Controller
             'status'     => $validated['status'],
         ]);
 
-        $user->assignRole(RoleEnum::tryFrom($validated['role']));
+        $user->syncRoles($validated['role']);
 
         return back()->with([
             'success' => true,
@@ -103,7 +107,8 @@ class UserController extends Controller
                 Rule::unique('users')->ignore($user->id),
             ],
             'password' => 'nullable|string|min:8|confirmed',
-            'role'     => ['required', Rule::enum(RoleEnum::class)],
+            'role'     => ['required', 'array'],
+            'role.*'   => [Rule::enum(RoleEnum::class)],
             'status'   => ['required', Rule::enum(UserStatusEnum::class)],
         ]);
 
@@ -118,7 +123,8 @@ class UserController extends Controller
                 'password' => Hash::make($validated['password']),
             ]);
         }
-        $user->syncRoles(RoleEnum::tryFrom($validated['role']));
+
+        $user->syncRoles($validated['role']);
 
         return back()->with([
             'success' => true,
@@ -139,11 +145,35 @@ class UserController extends Controller
                 ]);
         }
 
-        $user->delete();
+        if ($user->trashed()) {
+            // Restore
+            $user->restore();
+        } else {
+            // Soft delete
+            $user->delete();
+        }
 
         return redirect()->to(route('admin.user.index'))->with([
             'success' => true,
-            'message' => 'User deleted successfully',
+            'message' => 'User ' . ($user->trashed() ? 'restored' : 'deleted') . ' successfully',
+        ]);
+    }
+
+    public function audits(Request $request, User $user)
+    {
+        if (auth('web')->user()->cannot(PermissionEnum::USER_READ)) {
+            return redirect()->to(route('dashboard'))
+                ->with([
+                    'success' => false,
+                    'message' => 'You do not have permission to access this page.',
+                ]);
+        }
+
+        return response()->json([
+            'audits' => $user
+                ->audits()
+                ->with('user:id,first_name,last_name,email')
+                ->paginate($request->input('per_page', 5), pageName: 'user_audits'),
         ]);
     }
 }

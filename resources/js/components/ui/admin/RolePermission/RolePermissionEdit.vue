@@ -4,11 +4,10 @@ import { Button } from '@/components/ui/button';
 import Label from '@/components/ui/label/Label.vue';
 import Switch from '@/components/ui/switch/Switch.vue';
 import { GroupedPermission, SharedData, UserRole } from '@/types';
-import { router, useForm, usePage } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
 import { Save, X } from 'lucide-vue-next';
 import { onMounted, watch } from 'vue';
 import { toast } from 'vue3-toastify';
-
 
 const page = usePage<SharedData>();
 const props = defineProps<{
@@ -82,7 +81,27 @@ const close = () => {
         <form @submit.prevent="submit">
             <div class="">
                 <div v-for="(group, groupName) in props.permissions" :key="groupName" class="flex flex-col">
-                    <h3 class="py-3 text-lg font-bold capitalize">{{ groupName }}</h3>
+                    <div class="flex items-center gap-4">
+                        <Label :for="`group_${groupName}`" class="py-3 text-lg font-bold capitalize">{{ groupName }}</Label>
+                        <Switch
+                            :id="`group_${groupName as string}`"
+                            :model-value="group.every((p) => form.permissions.includes(p.id))"
+                            size="xl"
+                            @update:model-value="
+                                (checked) => {
+                                    checked
+                                        ? form.permissions.push(...group.map((p) => p.id))
+                                        : group.forEach((permission) => {
+                                              if (form.permissions.includes(permission.id)) {
+                                                  form.permissions.splice(form.permissions.indexOf(permission.id), 1);
+                                              }
+                                          });
+                                }
+                            "
+                        >
+                            <span class="sr-only">Toggle {{ groupName }}</span>
+                        </Switch>
+                    </div>
                     <div class="flex flex-col gap-4 pl-4">
                         <div v-for="permission in group" :key="permission.id" class="flex items-center gap-2">
                             <Switch

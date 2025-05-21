@@ -12,6 +12,52 @@
 
 namespace App\Models{
     use Illuminate\Support\Carbon;
+    use Illuminate\Database\Eloquent\Model;
+
+    /**
+     * @property int $id
+     * @property string|null $user_type
+     * @property string|null $user_id
+     * @property string $event
+     * @property string $auditable_type
+     * @property string $auditable_id
+     * @property array<array-key, mixed>|null $old_values
+     * @property array<array-key, mixed>|null $new_values
+     * @property string|null $url
+     * @property string|null $ip_address
+     * @property string|null $user_agent
+     * @property string|null $tags
+     * @property Carbon|null $created_at
+     * @property Carbon|null $updated_at
+     * @property-read Model|\Eloquent $auditable
+     * @property-read Model|\Eloquent|null $user
+     *
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|Audit newModelQuery()
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|Audit newQuery()
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|Audit query()
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|Audit whereAuditableId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|Audit whereAuditableType($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|Audit whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|Audit whereEvent($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|Audit whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|Audit whereIpAddress($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|Audit whereNewValues($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|Audit whereOldValues($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|Audit whereTags($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|Audit whereUpdatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|Audit whereUrl($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|Audit whereUserAgent($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|Audit whereUserId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|Audit whereUserType($value)
+     *
+     * @mixin \Eloquent
+     */
+    #[\AllowDynamicProperties]
+    class IdeHelperAudit {}
+}
+
+namespace App\Models{
+    use Illuminate\Support\Carbon;
     use Illuminate\Database\Eloquent\Collection;
 
     /**
@@ -82,7 +128,6 @@ namespace App\Models{
 
 namespace App\Models{
     use Illuminate\Support\Carbon;
-    use OwenIt\Auditing\Models\Audit;
     use Illuminate\Database\Eloquent\Collection;
     use Illuminate\Notifications\DatabaseNotification;
     use Illuminate\Notifications\DatabaseNotificationCollection;
@@ -99,6 +144,7 @@ namespace App\Models{
      * @property string|null $remember_token
      * @property Carbon|null $created_at
      * @property Carbon|null $updated_at
+     * @property Carbon|null $deleted_at
      * @property-read Collection<int, Audit> $audits
      * @property-read int|null $audits_count
      * @property-read string $name
@@ -112,11 +158,13 @@ namespace App\Models{
      * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
      * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|User onlyTrashed()
      * @method static \Illuminate\Database\Eloquent\Builder<static>|User permission($permissions, $without = false)
      * @method static \Illuminate\Database\Eloquent\Builder<static>|User query()
      * @method static \Illuminate\Database\Eloquent\Builder<static>|User role($roles, $guard = null, $without = false)
      * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereAutoId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereDeletedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereEmail($value)
      * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereEmailVerifiedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereFirstName($value)
@@ -126,8 +174,10 @@ namespace App\Models{
      * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRememberToken($value)
      * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereStatus($value)
      * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|User withTrashed()
      * @method static \Illuminate\Database\Eloquent\Builder<static>|User withoutPermission($permissions)
      * @method static \Illuminate\Database\Eloquent\Builder<static>|User withoutRole($roles, $guard = null)
+     * @method static \Illuminate\Database\Eloquent\Builder<static>|User withoutTrashed()
      *
      * @mixin \Eloquent
      */

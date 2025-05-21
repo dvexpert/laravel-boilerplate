@@ -6,6 +6,7 @@ use OwenIt\Auditing\Auditable;
 use Database\Factories\UserFactory;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,7 +21,7 @@ use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 class User extends Authenticatable implements AuditableContract
 {
     /** @use HasFactory<UserFactory> */
-    use Auditable, HasFactory, HasRoles, HasUuids, Notifiable;
+    use Auditable, HasFactory, HasRoles, HasUuids, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -59,6 +60,8 @@ class User extends Authenticatable implements AuditableContract
         return [
             'email_verified_at' => 'datetime',
             'password'          => 'hashed',
+            'created_at'        => 'datetime:d/m/Y H:i a',
+            'updated_at'        => 'datetime:d/m/Y H:i a',
         ];
     }
 

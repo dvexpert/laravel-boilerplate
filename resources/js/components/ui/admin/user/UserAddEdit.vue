@@ -10,15 +10,14 @@ import { RoleEnum } from '@/enums/RoleEnum';
 import { UserStatusEnum } from '@/enums/UserStatusEnum';
 import { SharedData, User } from '@/types';
 import { useForm, usePage } from '@inertiajs/vue3';
-import { Eye, EyeOff, Save, Trash, X } from 'lucide-vue-next';
+import { Eye, EyeOff, FileClock, RotateCcw, Save, Trash, X } from 'lucide-vue-next';
 import { onMounted, ref, watch } from 'vue';
-import { toast } from 'vue3-toastify';
 
 interface Props {
     user?: User;
 }
 
-const { can } = useUserCan()
+const { can } = useUserCan();
 const page = usePage<SharedData>();
 const props = defineProps<Props>();
 
@@ -28,7 +27,7 @@ const form = useForm({
     email: '',
     password: undefined,
     password_confirmation: undefined,
-    role: '',
+    role: [] as string[],
     status: String(UserStatusEnum.ACTIVE),
 });
 
@@ -68,7 +67,7 @@ function setUser(user: User) {
     form.email = user.email;
     form.password = undefined;
     form.password_confirmation = undefined;
-    form.role = user.roles[0].name.toString();
+    form.role = user.roles.map(role => role.name);
     form.status = String(user.status);
 }
 
@@ -86,7 +85,7 @@ const submit = () => {
         },
     });
 };
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'toggle-audit-logs']);
 const close = () => {
     form.reset();
     emit('close');
@@ -96,7 +95,7 @@ const deleteUser = () => {
         return;
     }
 
-    if (confirm('Are you sure you want to delete this user?')) {
+    if (confirm(`Are you sure you want to ${props.user?.deleted_at ? 'restore' : 'delete'} this user?`)) {
         form.delete(route('admin.user.destroy', props.user?.id), {
             onSuccess: () => {
                 close();
@@ -104,6 +103,8 @@ const deleteUser = () => {
         });
     }
 };
+
+const showAuditLogs = ref(false);
 </script>
 
 <template>
@@ -192,7 +193,7 @@ const deleteUser = () => {
                 </div>
                 <div class="flex flex-col gap-2">
                     <Label for="role">Role</Label>
-                    <Select v-model="form.role" :items="roles" placeholder="Role" class="w-full"></Select>
+                    <Select v-model="form.role" :items="roles" placeholder="Role" class="w-full" multiple></Select>
                     <InputError :message="form.errors.role" />
                 </div>
                 <div class="flex flex-col gap-2">
@@ -204,8 +205,12 @@ const deleteUser = () => {
                 <div class="flex items-center gap-4">
                     <Teleport to="#user-details-action-container">
                         <div class="flex items-center gap-2">
+                            <Button variant="secondary" size="sm" class="mr-6" :disabled="form.processing" @click="$emit('toggle-audit-logs')">
+                                <FileClock class="size-4" />
+                                Audit Logs
+                            </Button>
                             <Button
-                                v-if="user && page.props.auth.user.id !== user.id && can(PermissionEnum.USER_DELETE)"
+                                v-if="user && page.props.auth.user.id !== user.id && can(PermissionEnum.USER_DELETE) && !user.deleted_at"
                                 variant="destructive"
                                 size="sm"
                                 :disabled="form.processing"
@@ -214,11 +219,26 @@ const deleteUser = () => {
                                 <Trash class="size-4" />
                                 Delete
                             </Button>
+                            <Button
+                                v-if="user && page.props.auth.user.id !== user.id && can(PermissionEnum.USER_DELETE) && user.deleted_at"
+                                variant="outline"
+                                size="sm"
+                                :disabled="form.processing"
+                                @click="deleteUser"
+                            >
+                                <RotateCcw class="size-4" />
+                                Restore
+                            </Button>
                             <Button variant="secondary" size="sm" :disabled="form.processing" @click="close">
                                 <X class="size-4" />
                                 Cancel
                             </Button>
-                            <Button v-if="can(PermissionEnum.USER_CREATE) || can(PermissionEnum.USER_UPDATE)" :disabled="form.processing" size="sm" @click="submit">
+                            <Button
+                                v-if="can(PermissionEnum.USER_CREATE) || can(PermissionEnum.USER_UPDATE)"
+                                :disabled="form.processing"
+                                size="sm"
+                                @click="submit"
+                            >
                                 <Save class="size-4" />
                                 {{ user ? 'Update' : 'Create' }}
                             </Button>

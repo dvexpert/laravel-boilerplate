@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import AppLogoIcon from '@/components/AppLogoIcon.vue';
-import { usePage } from '@inertiajs/vue3';
+import AppLogoIcon from '@/components/AppLogoIcon.vue'
+import { usePage } from '@inertiajs/vue3'
 
-const page = usePage();
+const page = usePage()
 </script>
 
 <template>

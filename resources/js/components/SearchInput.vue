@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { X } from 'lucide-vue-next';
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { X } from 'lucide-vue-next'
 
 const searchField = defineModel('searchField', {
     type: String,
-});
+})
 
 const props = defineProps({
     clearable: {
         type: Boolean,
         default: true,
     },
-});
+})
 </script>
 
 <template>

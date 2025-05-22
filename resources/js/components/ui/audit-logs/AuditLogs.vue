@@ -1,48 +1,48 @@
 <script setup lang="ts">
 // This Component is to render the generic Audit Logs table with search filter etc.
-import { getColumns } from '@/components/ui/audit-logs';
-import DataTable from '@/components/ui/DataTable.vue';
-import DialogWrapper from '@/components/ui/dialog/DialogWrapper.vue';
-import PaginationWrapper from '@/components/ui/pagination/PaginationWrapper.vue';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Paginated, User } from '@/types';
-import { SortingState } from '@tanstack/vue-table';
-import axios, { AxiosResponse } from 'axios';
-import { onMounted, ref, watch } from 'vue';
-import { AuditLog } from './type';
+import { getColumns } from '@/components/ui/audit-logs'
+import DataTable from '@/components/ui/DataTable.vue'
+import DialogWrapper from '@/components/ui/dialog/DialogWrapper.vue'
+import PaginationWrapper from '@/components/ui/pagination/PaginationWrapper.vue'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Paginated, User } from '@/types'
+import { SortingState } from '@tanstack/vue-table'
+import axios, { AxiosResponse } from 'axios'
+import { onMounted, ref, watch } from 'vue'
+import { AuditLog } from './type'
 
-const props = defineProps<{ user: User }>();
-const data = ref<Paginated<AuditLog>>();
-const loading = ref(false);
-const viewData = ref<{ audit: AuditLog; uniqueKeys: string[] }>();
+const props = defineProps<{ user: User }>()
+const data = ref<Paginated<AuditLog>>()
+const loading = ref(false)
+const viewData = ref<{ audit: AuditLog; uniqueKeys: string[] }>()
 
 interface TableState {
-    sorting: SortingState;
-    search: string;
-    page: number;
-    pageSize: number;
+    sorting: SortingState
+    search: string
+    page: number
+    pageSize: number
 }
 const tableState = ref<TableState>({
     sorting: [] as SortingState,
     search: '',
     page: 1,
     pageSize: 5,
-});
+})
 
 watch(
     () => tableState.value,
     (newState) => {
-        getData(newState);
+        getData(newState)
     },
     {
         deep: true,
     },
-);
+)
 
 async function getData(withTableState?: TableState) {
-    const params = withTableState ?? tableState.value;
+    const params = withTableState ?? tableState.value
 
-    loading.value = true;
+    loading.value = true
     axios
         .get(
             route('admin.user.audits', {
@@ -56,26 +56,26 @@ async function getData(withTableState?: TableState) {
         )
         .catch((error) => {
             //
-            loading.value = false;
+            loading.value = false
         })
         .then((response: void | AxiosResponse<{ audits: Paginated<AuditLog> }>) => {
             if (response && response.status === 200 && response.data.audits) {
-                data.value = response.data.audits;
+                data.value = response.data.audits
             }
-            loading.value = false;
-        });
+            loading.value = false
+        })
 }
 
 onMounted(async () => {
-    await getData();
-});
+    await getData()
+})
 
 const viewHandler = (audit: AuditLog) => {
     viewData.value = {
         audit: audit,
         uniqueKeys: Array.from(new Set([...Object.keys(audit.old_values || {}), ...Object.keys(audit.new_values || {})])),
-    };
-};
+    }
+}
 </script>
 
 <template>
@@ -101,7 +101,7 @@ const viewHandler = (audit: AuditLog) => {
                 :with-link-navigation="false"
                 @page-change="
                     (page) => {
-                        tableState.page = Number(page);
+                        tableState.page = Number(page)
                     }
                 "
             />

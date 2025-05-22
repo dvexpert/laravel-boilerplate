@@ -1,10 +1,10 @@
-import tailwindcss from '@tailwindcss/vite';
-import vue from '@vitejs/plugin-vue';
-import laravel from 'laravel-vite-plugin';
-import { resolve } from 'node:path';
-import path from 'path';
-import { defineConfig } from 'vite';
-import eslint from 'vite-plugin-eslint';
+import tailwindcss from '@tailwindcss/vite'
+import vue from '@vitejs/plugin-vue'
+import laravel from 'laravel-vite-plugin'
+import { resolve } from 'node:path'
+import path from 'path'
+import { defineConfig } from 'vite'
+import eslint from 'vite-plugin-eslint'
 
 export default defineConfig({
     plugins: [
@@ -30,4 +30,4 @@ export default defineConfig({
             'ziggy-js': resolve(__dirname, 'vendor/tightenco/ziggy'),
         },
     },
-});
+})

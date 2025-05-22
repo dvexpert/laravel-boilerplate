@@ -1,42 +1,42 @@
 <script setup lang="ts">
-import RolePermissionEdit from '@/components/ui/admin/RolePermission/RolePermissionEdit.vue';
-import AdminLayout from '@/layouts/admin/Layout.vue';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { GroupedPermission, Permission, SharedData, UserRole } from '@/types';
-import { Head, usePage } from '@inertiajs/vue3';
-import { FilePen, ShieldUser } from 'lucide-vue-next';
-import { computed, ref } from 'vue';
+import RolePermissionEdit from '@/components/ui/admin/RolePermission/RolePermissionEdit.vue'
+import AdminLayout from '@/layouts/admin/Layout.vue'
+import AppLayout from '@/layouts/AppLayout.vue'
+import { GroupedPermission, Permission, SharedData, UserRole } from '@/types'
+import { Head, usePage } from '@inertiajs/vue3'
+import { FilePen, ShieldUser } from 'lucide-vue-next'
+import { computed, ref } from 'vue'
 
 interface Props extends SharedData {
-    roles: UserRole[];
-    permissions: Permission[];
+    roles: UserRole[]
+    permissions: Permission[]
 }
 
-const page = usePage<Props>();
+const page = usePage<Props>()
 
-const editRole = ref<UserRole | null>(null);
+const editRole = ref<UserRole | null>(null)
 
 const groupedPermissions = computed(() => {
-    const permissions = page.props.permissions;
-    const grouped: GroupedPermission = {};
+    const permissions = page.props.permissions
+    const grouped: GroupedPermission = {}
 
     permissions.forEach((permission) => {
-        const parts = permission.name.split('.');
+        const parts = permission.name.split('.')
         if (parts.length > 1) {
-            const group = parts[0];
+            const group = parts[0]
             if (!grouped[group]) {
-                grouped[group] = [];
+                grouped[group] = []
             }
-            grouped[group].push(permission);
+            grouped[group].push(permission)
         }
-    });
+    })
 
-    return grouped;
-});
+    return grouped
+})
 
 const handleEditRole = (role: UserRole | null) => {
-    editRole.value = role ? role : null;
-};
+    editRole.value = role ? role : null
+}
 </script>
 
 <template>

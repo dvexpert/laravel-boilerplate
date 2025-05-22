@@ -6,6 +6,6 @@ export const RoleEnum = {
     INVESTIGATION_MANAGER: 'investigation_manager',
     SYSTEM_ADMINISTRATOR: 'system_administrator',
     SUPERVISOR: 'supervisor',
-} as const;
+} as const
 
-export type RoleEnumType = (typeof RoleEnum)[keyof typeof RoleEnum];
+export type RoleEnumType = (typeof RoleEnum)[keyof typeof RoleEnum]

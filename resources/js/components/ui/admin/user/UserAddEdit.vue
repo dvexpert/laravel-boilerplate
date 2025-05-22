@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select } from '@/components/ui/select';
-import { useUserCan } from '@/composables/useUserCan';
-import { PermissionEnum } from '@/enums/PermissionEnum';
-import { RoleEnum } from '@/enums/RoleEnum';
-import { UserStatusEnum } from '@/enums/UserStatusEnum';
-import { SharedData, User } from '@/types';
-import { useForm, usePage } from '@inertiajs/vue3';
-import { Eye, EyeOff, FileClock, RotateCcw, Save, Trash, X } from 'lucide-vue-next';
-import { onMounted, ref, watch } from 'vue';
+import InputError from '@/components/InputError.vue'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select } from '@/components/ui/select'
+import { useUserCan } from '@/composables/useUserCan'
+import { PermissionEnum } from '@/enums/PermissionEnum'
+import { RoleEnum } from '@/enums/RoleEnum'
+import { UserStatusEnum } from '@/enums/UserStatusEnum'
+import { SharedData, User } from '@/types'
+import { useForm, usePage } from '@inertiajs/vue3'
+import { Eye, EyeOff, FileClock, RotateCcw, Save, Trash, X } from 'lucide-vue-next'
+import { onMounted, ref, watch } from 'vue'
 
 interface Props {
-    user?: User;
+    user?: User
 }
 
-const { can } = useUserCan();
-const page = usePage<SharedData>();
-const props = defineProps<Props>();
+const { can } = useUserCan()
+const page = usePage<SharedData>()
+const props = defineProps<Props>()
 
 const form = useForm({
     first_name: '',
@@ -29,82 +29,82 @@ const form = useForm({
     password_confirmation: undefined,
     role: [] as string[],
     status: String(UserStatusEnum.ACTIVE),
-});
+})
 
 const roles = Object.values(RoleEnum).map((role) => ({
     value: role,
     label: role.toTitleCase(),
-}));
+}))
 const statuses = Object.values(UserStatusEnum).map((statuses) => ({
     value: statuses,
     label: statuses.toTitleCase(),
-}));
+}))
 
-const showPassword = ref(false);
+const showPassword = ref(false)
 
 onMounted(() => {
     if (props.user) {
-        form.clearErrors();
-        setUser(props.user);
+        form.clearErrors()
+        setUser(props.user)
     }
-});
+})
 
 watch(
     () => props.user,
     () => {
         if (props.user) {
-            form.clearErrors();
-            setUser(props.user);
+            form.clearErrors()
+            setUser(props.user)
         } else {
-            form.reset();
+            form.reset()
         }
     },
-);
+)
 
 function setUser(user: User) {
-    form.first_name = user.first_name;
-    form.last_name = user.last_name;
-    form.email = user.email;
-    form.password = undefined;
-    form.password_confirmation = undefined;
-    form.role = user.roles.map(role => role.name);
-    form.status = String(user.status);
+    form.first_name = user.first_name
+    form.last_name = user.last_name
+    form.email = user.email
+    form.password = undefined
+    form.password_confirmation = undefined
+    form.role = user.roles.map((role) => role.name)
+    form.status = String(user.status)
 }
 
 const togglePassword = () => {
-    showPassword.value = !showPassword.value;
-};
+    showPassword.value = !showPassword.value
+}
 
 const submit = () => {
-    const method = props.user ? 'put' : 'post';
-    const url = props.user ? route('admin.user.update', props.user.id) : route('admin.user.store');
+    const method = props.user ? 'put' : 'post'
+    const url = props.user ? route('admin.user.update', props.user.id) : route('admin.user.store')
 
     form.submit(method, url, {
         onSuccess: () => {
-            close();
+            close()
         },
-    });
-};
-const emit = defineEmits(['close', 'toggle-audit-logs']);
+    })
+}
+const emit = defineEmits(['close', 'toggle-audit-logs'])
 const close = () => {
-    form.reset();
-    emit('close');
-};
+    form.reset()
+    emit('close')
+}
 const deleteUser = () => {
     if (props.user && page.props.auth.user.id === props.user.id) {
-        return;
+        return
     }
 
     if (confirm(`Are you sure you want to ${props.user?.deleted_at ? 'restore' : 'delete'} this user?`)) {
         form.delete(route('admin.user.destroy', props.user?.id), {
             onSuccess: () => {
-                close();
+                close()
             },
-        });
+        })
     }
-};
+}
 
-const showAuditLogs = ref(false);
+const showAuditLogs = ref(false)
 </script>
 
 <template>

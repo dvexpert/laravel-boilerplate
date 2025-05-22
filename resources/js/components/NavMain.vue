@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem, type SharedData } from '@/types';
-import { Link, usePage } from '@inertiajs/vue3';
+import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
+import { type NavItem, type SharedData } from '@/types'
+import { Link, usePage } from '@inertiajs/vue3'
 
 defineProps<{
-    items: NavItem[];
-}>();
+    items: NavItem[]
+}>()
 
-const page = usePage<SharedData>();
+const page = usePage<SharedData>()
 </script>
 
 <template>

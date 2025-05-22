@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import Heading from '@/components/Heading.vue';
-import { Button } from '@/components/ui/button';
-import { useSidebar } from '@/components/ui/sidebar';
-import { useUserCan } from '@/composables/useUserCan';
-import { PermissionEnum } from '@/enums/PermissionEnum';
-import { SharedData, type NavItem } from '@/types';
-import { Link, usePage } from '@inertiajs/vue3';
-import { FilePen, Settings, ShieldUser, Users } from 'lucide-vue-next';
-import { computed } from 'vue';
+import Heading from '@/components/Heading.vue'
+import { Button } from '@/components/ui/button'
+import { useSidebar } from '@/components/ui/sidebar'
+import { useUserCan } from '@/composables/useUserCan'
+import { PermissionEnum } from '@/enums/PermissionEnum'
+import { SharedData, type NavItem } from '@/types'
+import { Link, usePage } from '@inertiajs/vue3'
+import { FilePen, Settings, ShieldUser, Users } from 'lucide-vue-next'
+import { computed } from 'vue'
 
-const { can } = useUserCan();
+const { can } = useUserCan()
 
-const page = usePage<SharedData>();
+const page = usePage<SharedData>()
 
 const navItems: NavItem[] = [
     {
@@ -38,12 +38,12 @@ const navItems: NavItem[] = [
         icon: ShieldUser,
         isAllowed: true,
     },
-];
+]
 
-const computedNavItems = computed(() => navItems.filter((item) => can(item.isAllowed)));
+const computedNavItems = computed(() => navItems.filter((item) => can(item.isAllowed)))
 
-const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.location).pathname : '';
-const { isMobile } = useSidebar();
+const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.location).pathname : ''
+const { isMobile } = useSidebar()
 </script>
 
 <template>

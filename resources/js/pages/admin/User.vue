@@ -1,70 +1,70 @@
 <script setup lang="ts">
-import PerPage from '@/components/PerPage.vue';
-import SearchInput from '@/components/SearchInput.vue';
-import AuditLog from '@/components/ui/admin/audit-logs/AuditLog.vue';
-import UserAddEdit from '@/components/ui/admin/user/UserAddEdit.vue';
-import UserListSkeltonLoader from '@/components/ui/admin/user/UserListSkeltonLoader.vue';
-import { Button } from '@/components/ui/button';
-import { PaginationWrapper } from '@/components/ui/pagination';
-import { useUserCan } from '@/composables/useUserCan';
-import { PermissionEnum } from '@/enums/PermissionEnum';
-import { UserStatusEnum } from '@/enums/UserStatusEnum';
-import AdminLayout from '@/layouts/admin/Layout.vue';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { Paginated, SharedData, User } from '@/types';
-import { Deferred, Head, router, usePage } from '@inertiajs/vue3';
-import { watchDebounced } from '@vueuse/core';
-import { FilePen, UserPlus, Users } from 'lucide-vue-next';
-import { onMounted, ref } from 'vue';
+import PerPage from '@/components/PerPage.vue'
+import SearchInput from '@/components/SearchInput.vue'
+import AuditLog from '@/components/ui/admin/audit-logs/AuditLog.vue'
+import UserAddEdit from '@/components/ui/admin/user/UserAddEdit.vue'
+import UserListSkeltonLoader from '@/components/ui/admin/user/UserListSkeltonLoader.vue'
+import { Button } from '@/components/ui/button'
+import { PaginationWrapper } from '@/components/ui/pagination'
+import { useUserCan } from '@/composables/useUserCan'
+import { PermissionEnum } from '@/enums/PermissionEnum'
+import { UserStatusEnum } from '@/enums/UserStatusEnum'
+import AdminLayout from '@/layouts/admin/Layout.vue'
+import AppLayout from '@/layouts/AppLayout.vue'
+import { Paginated, SharedData, User } from '@/types'
+import { Deferred, Head, router, usePage } from '@inertiajs/vue3'
+import { watchDebounced } from '@vueuse/core'
+import { FilePen, UserPlus, Users } from 'lucide-vue-next'
+import { onMounted, ref } from 'vue'
 
 interface Props extends SharedData {
-    users: Paginated<User>;
+    users: Paginated<User>
 }
 interface fetchUsersParams {
-    search?: string;
-    per_page?: number;
-    page?: number;
+    search?: string
+    per_page?: number
+    page?: number
 }
 
-const { can } = useUserCan();
+const { can } = useUserCan()
 
-const page = usePage<Props>();
+const page = usePage<Props>()
 
-const searchField = ref<string>('');
-const perPage = ref<number>(page.props.users.per_page);
+const searchField = ref<string>('')
+const perPage = ref<number>(page.props.users.per_page)
 const action = ref<{ label?: 'create' | 'edit'; user?: User }>({
     label: undefined,
     user: undefined,
-});
-const showAuditLogs = ref(false);
+})
+const showAuditLogs = ref(false)
 const toggleAuditLogs = (value?: boolean) => {
-    showAuditLogs.value = typeof value === 'boolean' ? value : !showAuditLogs.value;
-};
+    showAuditLogs.value = typeof value === 'boolean' ? value : !showAuditLogs.value
+}
 
 onMounted(() => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(window.location.search)
     if (params.has('search')) {
-        searchField.value = params.get('search') ?? '';
+        searchField.value = params.get('search') ?? ''
     }
 
-    watchDebounced(() => [searchField.value, perPage.value], fetchUsers, { debounce: 300 });
-});
+    watchDebounced(() => [searchField.value, perPage.value], fetchUsers, { debounce: 300 })
+})
 
 const fetchUsers = () => {
-    const params: fetchUsersParams = {};
-    if (searchField.value !== '') params.search = searchField.value;
+    const params: fetchUsersParams = {}
+    if (searchField.value !== '') params.search = searchField.value
     if (perPage.value !== 5) {
-        params.per_page = perPage.value;
-        params.page = 1;
+        params.per_page = perPage.value
+        params.page = 1
     }
 
-    router.get(route('admin.user.index'), { ...params }, { preserveState: true, preserveScroll: true, only: ['users'] });
-};
+    router.get(route('admin.user.index'), { ...params }, { preserveState: true, preserveScroll: true, only: ['users'] })
+}
 
 const editUser = (user: User) => {
-    action.value.label = 'edit';
-    action.value.user = user;
-};
+    action.value.label = 'edit'
+    action.value.user = user
+}
 </script>
 
 <template>
@@ -110,7 +110,7 @@ const editUser = (user: User) => {
                                 @click="
                                     () => {
                                         if (can(PermissionEnum.USER_UPDATE)) {
-                                            editUser(user);
+                                            editUser(user)
                                         }
                                     }
                                 "

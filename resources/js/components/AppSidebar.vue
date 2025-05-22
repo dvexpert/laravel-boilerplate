@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import NavMain from '@/components/NavMain.vue';
+import NavMain from '@/components/NavMain.vue'
 import {
     Sidebar,
     SidebarContent,
@@ -9,13 +9,13 @@ import {
     SidebarMenuItem,
     SidebarTrigger,
     useSidebar,
-} from '@/components/ui/sidebar';
-import { SharedData, type NavItem } from '@/types';
-import { Link, usePage } from '@inertiajs/vue3';
-import { LayoutGrid, Settings } from 'lucide-vue-next';
+} from '@/components/ui/sidebar'
+import { SharedData, type NavItem } from '@/types'
+import { Link, usePage } from '@inertiajs/vue3'
+import { LayoutGrid, Settings } from 'lucide-vue-next'
 // import AppLogo from './AppLogo.vue';
 
-const page = usePage<SharedData>();
+const page = usePage<SharedData>()
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
@@ -30,9 +30,9 @@ const mainNavItems: NavItem[] = [
         isActive: page.url.startsWith('/admin'),
         isAllowed: true,
     },
-];
+]
 
-const { open: isSidebarOpen } = useSidebar();
+const { open: isSidebarOpen } = useSidebar()
 // const footerNavItems: NavItem[] = [
 //     {
 //         title: 'Github Repo',

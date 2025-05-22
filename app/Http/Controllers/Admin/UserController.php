@@ -169,10 +169,34 @@ class UserController extends Controller
                 ]);
         }
 
+        $sortBy  = $request->input('sort', null);
+        $sortDir = $request->input('order', 'asc');
+        $search  = str($request->input('search', ''))->lower()->trim();
+
         return response()->json([
             'audits' => $user
                 ->audits()
                 ->with('user:id,first_name,last_name,email')
+                ->when($sortBy, function ($query) use ($sortBy, $sortDir): void {
+                    $query->orderBy($sortBy, $sortDir);
+                })
+                ->when($search->isNotEmpty(), function ($query) use ($search): void {
+                    $search = $search->toString();
+                    $query->where(function (EloquentBuilder $eloquentBuilder) use ($search): void {
+                        if (str_starts_with($search, '#')) {
+                            $id = (int) ltrim($search, '#');
+                            $eloquentBuilder->where('id', $id);
+                        } else {
+                            $eloquentBuilder
+                                ->where('event', 'like', "%{$search}%")
+                                ->orWhere('auditable_type', 'like', "%{$search}%")
+                                ->orWhereHas('user', function (EloquentBuilder $userQuery) use ($search): void {
+                                    $userQuery->where('first_name', 'like', "%{$search}%")
+                                        ->orWhere('last_name', 'like', "%{$search}%");
+                                });
+                        }
+                    });
+                })
                 ->paginate($request->input('per_page', 5), pageName: 'user_audits'),
         ]);
     }

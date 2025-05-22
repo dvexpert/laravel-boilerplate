@@ -1,24 +1,24 @@
-import '../css/app.css';
+import '../css/app.css'
 
-import { createInertiaApp } from '@inertiajs/vue3';
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import type { DefineComponent } from 'vue';
-import { createApp, h } from 'vue';
+import { createInertiaApp } from '@inertiajs/vue3'
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
+import type { DefineComponent } from 'vue'
+import { createApp, h } from 'vue'
 // https://github.com/jerrywu001/vue3-toastify
-import Vue3Toastify, { type ToastContainerOptions } from 'vue3-toastify';
-import { ZiggyVue } from 'ziggy-js';
-import { initializeTheme } from './composables/useAppearance';
+import Vue3Toastify, { type ToastContainerOptions } from 'vue3-toastify'
+import { ZiggyVue } from 'ziggy-js'
+import { initializeTheme } from './composables/useAppearance'
 
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
     interface ImportMetaEnv {
-        readonly VITE_APP_NAME: string;
-        [key: string]: string | boolean | undefined;
+        readonly VITE_APP_NAME: string
+        [key: string]: string | boolean | undefined
     }
 
     interface ImportMeta {
-        readonly env: ImportMetaEnv;
-        readonly glob: <T>(pattern: string) => Record<string, () => Promise<T>>;
+        readonly env: ImportMetaEnv
+        readonly glob: <T>(pattern: string) => Record<string, () => Promise<T>>
     }
 }
 
@@ -27,11 +27,11 @@ if (!String.prototype.toTitleCase) {
         return this.replace(/_/g, ' ')
             .split(' ')
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-            .join(' ');
-    };
+            .join(' ')
+    }
 }
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'Laravel'
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./pages/${name}.vue`, import.meta.glob<DefineComponent>('./pages/**/*.vue')),
@@ -44,14 +44,14 @@ createInertiaApp({
                 position: 'top-right',
                 limit: 3,
             } as ToastContainerOptions)
-            .mount(el);
+            .mount(el)
     },
     progress: {
         color: '#4B5563',
         delay: 10,
         showSpinner: true,
     },
-});
+})
 
 // This will set light / dark mode on page load...
-initializeTheme('light');
+initializeTheme('light')

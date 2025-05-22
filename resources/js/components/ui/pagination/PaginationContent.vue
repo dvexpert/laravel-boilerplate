@@ -6,19 +6,19 @@ import { computed, type HTMLAttributes } from 'vue'
 const props = defineProps<PaginationListProps & { class?: HTMLAttributes['class'] }>()
 
 const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
+    const { class: _, ...delegated } = props
 
-  return delegated
+    return delegated
 })
 </script>
 
 <template>
-  <PaginationList
-    v-slot="slotProps"
-    data-slot="pagination-content"
-    v-bind="delegatedProps"
-    :class="cn('flex flex-row items-center gap-1', props.class)"
-  >
-    <slot v-bind="slotProps" />
-  </PaginationList>
+    <PaginationList
+        v-slot="slotProps"
+        data-slot="pagination-content"
+        v-bind="delegatedProps"
+        :class="cn('flex flex-row items-center gap-1', props.class)"
+    >
+        <slot v-bind="slotProps" />
+    </PaginationList>
 </template>

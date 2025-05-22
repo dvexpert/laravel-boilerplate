@@ -3,6 +3,6 @@ export const PermissionEnum = {
     USER_CREATE: 'user.create',
     USER_UPDATE: 'user.update',
     USER_DELETE: 'user.delete',
-} as const;
+} as const
 
-export type PermissionEnumType = (typeof PermissionEnum)[keyof typeof PermissionEnum];
+export type PermissionEnumType = (typeof PermissionEnum)[keyof typeof PermissionEnum]

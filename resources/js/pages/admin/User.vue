@@ -64,6 +64,7 @@ const fetchUsers = () => {
 const editUser = (user: User) => {
     action.value.label = 'edit'
     action.value.user = user
+    showAuditLogs.value = false
 }
 </script>
 

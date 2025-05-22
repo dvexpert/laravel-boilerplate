@@ -1,49 +1,49 @@
 <script setup lang="ts">
-import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import Label from '@/components/ui/label/Label.vue';
-import Switch from '@/components/ui/switch/Switch.vue';
-import { GroupedPermission, SharedData, UserRole } from '@/types';
-import { useForm, usePage } from '@inertiajs/vue3';
-import { Save, X } from 'lucide-vue-next';
-import { onMounted, watch } from 'vue';
-import { toast } from 'vue3-toastify';
+import InputError from '@/components/InputError.vue'
+import { Button } from '@/components/ui/button'
+import Label from '@/components/ui/label/Label.vue'
+import Switch from '@/components/ui/switch/Switch.vue'
+import { GroupedPermission, SharedData, UserRole } from '@/types'
+import { useForm, usePage } from '@inertiajs/vue3'
+import { Save, X } from 'lucide-vue-next'
+import { onMounted, watch } from 'vue'
+import { toast } from 'vue3-toastify'
 
-const page = usePage<SharedData>();
+const page = usePage<SharedData>()
 const props = defineProps<{
-    role: UserRole;
-    permissions: GroupedPermission;
-}>();
+    role: UserRole
+    permissions: GroupedPermission
+}>()
 
 const form = useForm('RolePermissionForm', {
     permissions: props.role.permissions.map((permission) => permission.id),
-});
+})
 
 onMounted(() => {
     if (props.role) {
-        if (form.hasErrors) form.clearErrors();
-        initRolePermissionEdit(props.role);
+        if (form.hasErrors) form.clearErrors()
+        initRolePermissionEdit(props.role)
     }
-});
+})
 
 watch(
     () => props.role,
     () => {
         if (props.role) {
-            form.clearErrors();
-            initRolePermissionEdit(props.role);
+            form.clearErrors()
+            initRolePermissionEdit(props.role)
         } else {
-            form.reset();
+            form.reset()
         }
     },
-);
+)
 
 function initRolePermissionEdit(role: UserRole) {
-    form.reset();
+    form.reset()
     form.defaults(
         'permissions',
         role.permissions.map((permission) => permission.id),
-    );
+    )
 }
 
 const submit = () => {
@@ -52,28 +52,28 @@ const submit = () => {
             type: 'error',
             autoClose: 2000,
             position: 'top-right',
-        });
-        return;
+        })
+        return
     }
 
-    const url = route('admin.role-permission.update', props.role.id);
+    const url = route('admin.role-permission.update', props.role.id)
 
     form.submit('put', url, {
         onSuccess: () => {
-            close();
+            close()
 
             if (page.props.auth.user.roles.some((role) => role.id === props.role.id)) {
-                window.location.reload();
+                window.location.reload()
             }
         },
-    });
-};
+    })
+}
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close'])
 const close = () => {
-    form.reset();
-    emit('close');
-};
+    form.reset()
+    emit('close')
+}
 </script>
 
 <template>
@@ -93,9 +93,9 @@ const close = () => {
                                         ? form.permissions.push(...group.map((p) => p.id))
                                         : group.forEach((permission) => {
                                               if (form.permissions.includes(permission.id)) {
-                                                  form.permissions.splice(form.permissions.indexOf(permission.id), 1);
+                                                  form.permissions.splice(form.permissions.indexOf(permission.id), 1)
                                               }
-                                          });
+                                          })
                                 }
                             "
                         >
@@ -112,7 +112,7 @@ const close = () => {
                                     (checked) => {
                                         checked
                                             ? form.permissions.push(permission.id)
-                                            : form.permissions.splice(form.permissions.indexOf(permission.id), 1);
+                                            : form.permissions.splice(form.permissions.indexOf(permission.id), 1)
                                     }
                                 "
                             >

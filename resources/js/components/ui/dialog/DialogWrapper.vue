@@ -1,27 +1,18 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
-import { type DialogRootProps, useForwardProps } from 'reka-ui';
-import { computed, HTMLAttributes } from 'vue';
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { type DialogRootProps, useForwardProps } from 'reka-ui'
+import { computed, HTMLAttributes } from 'vue'
 
 const props = withDefaults(
     defineProps<
         DialogRootProps & {
-            title?: string;
-            description?: string;
-            contentClass?: HTMLAttributes['class'];
-            withTrigger?: boolean;
-            withFooterClose?: boolean;
-            withFooterSave?: boolean;
+            title?: string
+            description?: string
+            contentClass?: HTMLAttributes['class']
+            withTrigger?: boolean
+            withFooterClose?: boolean
+            withFooterSave?: boolean
         }
     >(),
     {
@@ -29,16 +20,16 @@ const props = withDefaults(
         withFooterClose: false,
         withFooterSave: false,
     },
-);
+)
 
 const delegatedProps = computed(() => {
-    const { /* class: _, */ ...delegated } = props;
+    const { /* class: _, */ ...delegated } = props
 
-    return delegated;
-});
-const forwardedProps = useForwardProps(delegatedProps);
+    return delegated
+})
+const forwardedProps = useForwardProps(delegatedProps)
 
-const emits = defineEmits(['close']);
+const emits = defineEmits(['close'])
 </script>
 
 <template>

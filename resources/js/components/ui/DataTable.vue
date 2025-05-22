@@ -1,49 +1,49 @@
 <script setup lang="ts" generic="TData, TValue">
-import HelpTooltip from '@/components/HelpTooltip.vue';
-import PerPage from '@/components/PerPage.vue';
-import { Input } from '@/components/ui/input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { valueUpdater } from '@/lib/utils';
-import type { ColumnDef, PaginationState, SortingState } from '@tanstack/vue-table';
-import { FlexRender, getCoreRowModel, getSortedRowModel, useVueTable } from '@tanstack/vue-table';
-import { Lightbulb } from 'lucide-vue-next';
-import { ref } from 'vue';
+import HelpTooltip from '@/components/HelpTooltip.vue'
+import PerPage from '@/components/PerPage.vue'
+import { Input } from '@/components/ui/input'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { valueUpdater } from '@/lib/utils'
+import type { ColumnDef, PaginationState, SortingState } from '@tanstack/vue-table'
+import { FlexRender, getCoreRowModel, getSortedRowModel, useVueTable } from '@tanstack/vue-table'
+import { Lightbulb } from 'lucide-vue-next'
+import { ref } from 'vue'
 
 const props = withDefaults(
     defineProps<{
-        columns: ColumnDef<TData, TValue>[];
-        data: TData[];
+        columns: ColumnDef<TData, TValue>[]
+        data: TData[]
         tableState: {
-            sorting: SortingState;
-            search: string;
-            pageSize: number;
-        };
-        withSearch?: boolean;
-        withPageSize?: boolean;
+            sorting: SortingState
+            search: string
+            pageSize: number
+        }
+        withSearch?: boolean
+        withPageSize?: boolean
     }>(),
     {
         withSearch: false,
         withPageSize: false,
     },
-);
+)
 
-const sorting = ref<SortingState>([]);
-const globalSearch = ref<string>('');
-const pageSize = ref<number>(5);
+const sorting = ref<SortingState>([])
+const globalSearch = ref<string>('')
+const pageSize = ref<number>(5)
 const emit = defineEmits<{
-    (e: 'update:tableState', value: typeof props.tableState): void;
-}>();
+    (e: 'update:tableState', value: typeof props.tableState): void
+}>()
 
 function updateState<K extends keyof typeof props.tableState>(key: K, value: (typeof props.tableState)[K]) {
-    emit('update:tableState', { ...props.tableState, [key]: value });
+    emit('update:tableState', { ...props.tableState, [key]: value })
 }
 
 const table = useVueTable({
     get data() {
-        return props.data;
+        return props.data
     },
     get columns() {
-        return props.columns;
+        return props.columns
     },
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
@@ -51,38 +51,38 @@ const table = useVueTable({
     manualFiltering: true,
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: (updaterOrValue) => {
-        const value = valueUpdater(updaterOrValue, sorting);
+        const value = valueUpdater(updaterOrValue, sorting)
 
-        updateState('sorting', value);
+        updateState('sorting', value)
     },
     onGlobalFilterChange: (updaterOrValue) => {
-        const value = valueUpdater(updaterOrValue, globalSearch);
+        const value = valueUpdater(updaterOrValue, globalSearch)
 
         if (value === '' || value.length > 1) {
-            updateState('search', value);
+            updateState('search', value)
         }
     },
     onPaginationChange: (updaterOrValue) => {
-        const value = valueUpdater(updaterOrValue, pageSize, true) as unknown as PaginationState;
+        const value = valueUpdater(updaterOrValue, pageSize, true) as unknown as PaginationState
 
-        pageSize.value = value.pageSize;
-        updateState('pageSize', value.pageSize);
+        pageSize.value = value.pageSize
+        updateState('pageSize', value.pageSize)
     },
     state: {
         get sorting() {
-            return sorting.value;
+            return sorting.value
         },
         get globalFilter() {
-            return globalSearch.value;
+            return globalSearch.value
         },
         get pagination() {
             return {
                 pageIndex: pageSize.value - 1,
                 pageSize: pageSize.value,
-            };
+            }
         },
     },
-});
+})
 </script>
 
 <template>

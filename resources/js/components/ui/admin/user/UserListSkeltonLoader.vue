@@ -1,5 +1,4 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
     <div v-for="i in 3" :key="`admin-user-list-skelton-loader-${i}`" class="flex animate-pulse items-center justify-between p-4">

@@ -1,35 +1,35 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button'
 
-import { buttonVariants } from '@/components/ui/button';
-import { Pagination, PaginationEllipsis } from '@/components/ui/pagination';
-import { cn } from '@/lib/utils';
-import { Paginated } from '@/types';
-import { Link } from '@inertiajs/vue3';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-vue-next';
-import { PaginationList, PaginationListItem } from 'reka-ui';
-import { ref, watch } from 'vue';
+import { buttonVariants } from '@/components/ui/button'
+import { Pagination, PaginationEllipsis } from '@/components/ui/pagination'
+import { cn } from '@/lib/utils'
+import { Paginated } from '@/types'
+import { Link } from '@inertiajs/vue3'
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-vue-next'
+import { PaginationList, PaginationListItem } from 'reka-ui'
+import { ref, watch } from 'vue'
 
 const props = withDefaults(
     defineProps<{
-        data: Paginated;
-        withLinkNavigation?: boolean;
+        data: Paginated
+        withLinkNavigation?: boolean
     }>(),
     {
         withLinkNavigation: true,
     },
-);
+)
 
-const currentPage = ref(props.data.current_page);
+const currentPage = ref(props.data.current_page)
 
-const emits = defineEmits<{ 'page-change': [value: number | string] }>();
+const emits = defineEmits<{ 'page-change': [value: number | string] }>()
 watch(
     () => props.data.current_page,
     (newPage) => {
-        currentPage.value = newPage;
+        currentPage.value = newPage
     },
     { immediate: true },
-);
+)
 </script>
 
 <template>
@@ -55,7 +55,7 @@ watch(
                 :disabled="props.data.current_page === 1"
                 @click.prevent="
                     () => {
-                        !props.withLinkNavigation && emits('page-change', 1);
+                        !props.withLinkNavigation && emits('page-change', 1)
                     }
                 "
             >
@@ -73,7 +73,7 @@ watch(
                 @click.prevent="
                     () => {
                         if (props.data.prev_page_url && !props.withLinkNavigation) {
-                            emits('page-change', props.data.per_page);
+                            emits('page-change', props.data.per_page)
                         }
                     }
                 "
@@ -94,7 +94,7 @@ watch(
                         @click.prevent="
                             () => {
                                 if (item.value !== page && !props.withLinkNavigation) {
-                                    emits('page-change', item.value);
+                                    emits('page-change', item.value)
                                 }
                             }
                         "
@@ -118,7 +118,7 @@ watch(
                 @click.prevent="
                     () => {
                         if (props.data.last_page_url && !props.withLinkNavigation) {
-                            emits('page-change', props.data.last_page);
+                            emits('page-change', props.data.last_page)
                         }
                     }
                 "
@@ -137,7 +137,7 @@ watch(
                 @click.prevent="
                     () => {
                         if (props.data.next_page_url && !props.withLinkNavigation) {
-                            emits('page-change', props.data.current_page + 1);
+                            emits('page-change', props.data.current_page + 1)
                         }
                     }
                 "

@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { cn } from '@/lib/utils';
-import { reactiveOmit } from '@vueuse/core';
-import type { HTMLAttributes } from 'vue';
-import TableCell from './TableCell.vue';
-import TableRow from './TableRow.vue';
+import { cn } from '@/lib/utils'
+import { reactiveOmit } from '@vueuse/core'
+import type { HTMLAttributes } from 'vue'
+import TableCell from './TableCell.vue'
+import TableRow from './TableRow.vue'
 
 const props = withDefaults(
     defineProps<{
-        class?: HTMLAttributes['class'];
-        colspan?: number;
+        class?: HTMLAttributes['class']
+        colspan?: number
     }>(),
     {
         colspan: 1,
     },
-);
+)
 
-const delegatedProps = reactiveOmit(props, 'class');
+const delegatedProps = reactiveOmit(props, 'class')
 </script>
 
 <template>

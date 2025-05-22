@@ -2,6 +2,7 @@ import { AuditLog } from '@/components/ui/audit-logs/type';
 import { Button } from '@/components/ui/button';
 import { User } from '@/types';
 import { ColumnDef } from '@tanstack/vue-table';
+import { ArrowUp, ArrowUpDown } from 'lucide-vue-next';
 import { h } from 'vue';
 
 interface ColumnsProps {
@@ -11,14 +12,47 @@ export default function getColumns({ viewHandler }: ColumnsProps): ColumnDef<Aud
     return [
         {
             accessorKey: 'id',
-            header: () => h('div', { class: 'text-right' }, 'Id'),
+            header: ({ column }) => {
+                const sortState = column.getIsSorted();
+
+                let IconComponent = ArrowUpDown;
+                let iconClass = 'ml-2 h-4 w-4 transition-transform';
+
+                if (sortState === 'asc' || sortState === 'desc') {
+                    IconComponent = ArrowUp; // use one arrow and rotate it
+                    iconClass += ' transform ' + (sortState === 'desc' ? 'rotate-0' : 'rotate-180') + ' text-black font-bold';
+                }
+
+                return h(
+                    Button,
+                    {
+                        variant: 'ghost',
+                        class: 'text-right',
+                        onClick: () => {
+                            column.toggleSorting(column.getIsSorted() === 'asc');
+                        },
+                    },
+                    () => ['Id', h(IconComponent, { class: iconClass })],
+                );
+            },
             cell: ({ row }) => {
                 return h('div', { class: 'text-right font-medium' }, row.getValue('id'));
             },
         },
         {
             accessorKey: 'created_at',
-            header: () => h('div', { class: '' }, 'Data & Time'),
+            header: ({ column }) => {
+                return h(
+                    Button,
+                    {
+                        variant: 'ghost',
+                        class: 'text-right',
+                        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+                    },
+
+                    () => ['Data & Time', h(ArrowUpDown, { class: 'ml-2 h-4 w-4' })],
+                );
+            },
             cell: ({ row }) => {
                 return h('div', { class: 'font-medium' }, row.getValue('created_at'));
             },

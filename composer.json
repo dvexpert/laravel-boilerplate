@@ -1,8 +1,8 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "oneblinkcomm/ppa-pwd-2025",
+    "name": "dvexpert/laravel-boilerplate",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "The boilerplate application for the VILT Stack.",
     "keywords": [
         "laravel",
         "framework"

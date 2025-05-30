@@ -1,13 +1,13 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
     "name": "dvexpert/laravel-boilerplate",
-    "type": "project",
+    "type": "library",
     "description": "The boilerplate application for the VILT Stack.",
     "keywords": [
         "laravel",
         "framework"
     ],
-    "license": "MIT",
+    "license": "proprietary",
     "require": {
         "php": "^8.2",
         "inertiajs/inertia-laravel": "^2.0.2",

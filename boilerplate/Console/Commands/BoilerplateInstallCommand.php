@@ -3,11 +3,16 @@
 namespace Boilerplate\Console\Commands;
 
 use Illuminate\Console\Command;
+use Boilerplate\Console\Commands\Traits\SetupFiles;
+use Boilerplate\Console\Commands\Traits\SetupPackagesAndConfig;
 
-use function Laravel\Prompts\warning;
+use function Laravel\Prompts\info;
+use function Illuminate\Support\php_binary;
 
 class BoilerplateInstallCommand extends Command
 {
+    use SetupFiles, SetupPackagesAndConfig;
+
     /**
      * The name and signature of the console command.
      *
@@ -27,6 +32,14 @@ class BoilerplateInstallCommand extends Command
      */
     public function handle()
     {
-        warning('TODO: Boilerplate Install Command.');
+        info('Installing boilerplate...');
+
+        $this->setupPackagesAndConfig();
+        $this->setupFiles();
+    }
+
+    protected function phpBinary(): string
+    {
+        return php_binary();
     }
 }

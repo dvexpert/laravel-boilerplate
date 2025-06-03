@@ -1,0 +1,32 @@
+{
+    "Laravel.blade.autoSpaceTags": false,
+    "Laravel.bladeComponent.completion": false,
+    "Laravel.bladeComponent.hover": false,
+    "Laravel.bladeComponent.link": false,
+    "Laravel.view.completion": false,
+    "Laravel.view.diagnostics": false,
+    "Laravel.view.hover": false,
+    "Laravel.view.link": false,
+    "typescript.preferences.importModuleSpecifier": "non-relative",
+    "eslint.useFlatConfig": true,
+    "php.executablePath": "/usr/bin/php8.4",
+    "cSpell.words": ["axios", "nprogress"],
+    "intelephense.files.exclude": [
+        "**/.git/**",
+        "**/.svn/**",
+        "**/.hg/**",
+        "**/CVS/**",
+        "**/.DS_Store/**",
+        "**/node_modules/**",
+        "**/bower_components/**",
+        "**/vendor/**/{Tests,tests}/**",
+        "**/.history/**",
+        "**/vendor/**/vendor/**",
+        "**/vendor/dvexpert/laravel-boilerplate/src/**",
+        "**/vendor/dvexpert/laravel-boilerplate/tests/**",
+        "**/vendor/dvexpert/laravel-boilerplate/database/**",
+        "**/vendor/dvexpert/laravel-boilerplate/bootstrap/**",
+        "**/vendor/dvexpert/laravel-boilerplate/config/**",
+        "**/vendor/dvexpert/laravel-boilerplate/routes/**"
+    ]
+}

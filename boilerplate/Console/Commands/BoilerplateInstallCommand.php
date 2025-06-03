@@ -3,15 +3,17 @@
 namespace Boilerplate\Console\Commands;
 
 use Illuminate\Console\Command;
-use Boilerplate\Console\Commands\Traits\SetupFiles;
-use Boilerplate\Console\Commands\Traits\SetupPackagesAndConfig;
+use Boilerplate\Console\Commands\Traits\{
+    SetupAppProviders,
+    SetupFiles,
+    SetupPackagesAndConfig
+};
 
 use function Laravel\Prompts\info;
-use function Illuminate\Support\php_binary;
 
 class BoilerplateInstallCommand extends Command
 {
-    use SetupFiles, SetupPackagesAndConfig;
+    use SetupAppProviders, SetupFiles, SetupPackagesAndConfig;
 
     /**
      * The name and signature of the console command.
@@ -28,18 +30,30 @@ class BoilerplateInstallCommand extends Command
     protected $description = 'Boilerplate Install Command';
 
     /**
+     * List packages to exclude from moving to composer.json.
+     *
+     * @var array
+     */
+    protected $boilerPlatePackages = [];
+
+    /**
      * Execute the console command.
      */
     public function handle()
     {
         info('Installing boilerplate...');
 
+        $this->boilerPlatePackages = [
+            'nikic/php-parser',
+        ];
+
         $this->setupPackagesAndConfig();
+        $this->configureAppServiceProvider();
         $this->setupFiles();
     }
 
-    protected function phpBinary(): string
+    protected function pintBinary(): string
     {
-        return php_binary();
+        return 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'pint';
     }
 }

@@ -2,11 +2,13 @@
 
 namespace Boilerplate\Console\Commands\Traits;
 
+use Illuminate\Support\Arr;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Process;
 use Boilerplate\Console\Commands\BoilerplateInstallCommand;
 
 use function Laravel\Prompts\warning;
+use function Illuminate\Support\{artisan_binary, php_binary};
 
 /**
  * @template T of array{require: array<string, string>, require-dev: array<string, string>}
@@ -19,6 +21,7 @@ trait SetupPackagesAndConfig
         $this->vscodeSettings();
         $this->setupNpmPackages();
         $this->setupComposerPackages();
+        $this->exposePackageAssets();
         $this->copyConfigs();
     }
 
@@ -80,6 +83,7 @@ trait SetupPackagesAndConfig
         $composerContent['require-dev']                       = $this->mergeDependenciesWithPriority($boilerplateComposerContent['require-dev'], $composerContent['require-dev']);
         $composerContent['scripts']['dev']                    = $boilerplateComposerContent['scripts']['dev'];
         $composerContent['extra']['laravel']['dont-discover'] = array_unique(array_merge($boilerplateComposerContent['extra']['laravel']['dont-discover'], $composerContent['extra']['laravel']['dont-discover']));
+        $composerContent['autoload']['exclude-from-classmap'] = array_unique(array_merge($boilerplateComposerContent['autoload']['exclude-from-classmap'], $composerContent['autoload']['exclude-from-classmap'] ?? []));
 
         file_put_contents(base_path('composer.json'), json_encode($composerContent, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL);
 
@@ -87,6 +91,36 @@ trait SetupPackagesAndConfig
             ->path(base_path())
             ->run(
                 ['composer', 'update'],
+                function (string $type, string $output) {
+                    $this->output->write($output);
+                }
+            );
+    }
+
+    /**
+     * Exposes package assets by running artisan commands to publish
+     * configurations and assets for specific packages. This includes
+     * exporting the log-viewer configuration and publishing Telescope assets.
+     */
+    private function exposePackageAssets()
+    {
+        /** @var BoilerplateInstallCommand $this */
+        warning('Exposing package assets...');
+
+        // Export log-viewer config from it's package to get latest assets
+        Process::timeout(0)
+            ->path(base_path())
+            ->run(
+                [php_binary(), artisan_binary(), 'log-viewer:publish'],
+                function (string $type, string $output) {
+                    $this->output->write($output);
+                }
+            );
+
+        Process::timeout(0)
+            ->path(base_path())
+            ->run(
+                [php_binary(), artisan_binary(), 'vendor:publish', '--tag=telescope-assets'],
                 function (string $type, string $output) {
                     $this->output->write($output);
                 }
@@ -104,6 +138,7 @@ trait SetupPackagesAndConfig
      */
     private function mergeDependenciesWithPriority(array $base, array $override): array
     {
+        /** @var BoilerplateInstallCommand $this */
         $merged = $base;
 
         foreach ($override as $package => $version) {
@@ -121,6 +156,11 @@ trait SetupPackagesAndConfig
                 $merged[$package] = $version;
             }
         }
+
+        // Exclude boilerplate specific packages.
+        $merged = Arr::where($merged, function ($version, $package) {
+            return ! in_array($package, $this->boilerPlatePackages);
+        });
 
         return $merged;
     }

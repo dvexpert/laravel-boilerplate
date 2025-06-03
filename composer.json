@@ -2,7 +2,7 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "dvexpert/laravel-boilerplate",
     "type": "library",
-    "version": "0.1.2",
+    "version": "0.1.4",
     "description": "The boilerplate application for the VILT Stack.",
     "keywords": [
         "laravel",
